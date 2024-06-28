@@ -1,6 +1,10 @@
 package com.it.onefool.nsfw18.domain.vo;
 
+import com.it.onefool.nsfw18.domain.dto.ChapterDto;
+import com.it.onefool.nsfw18.domain.dto.CommentDto;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @Author linjiawei
@@ -29,30 +33,6 @@ public class CartoonVo {
     private String describe;
 
     /**
-     * 漫画章节id
-     */
-    private Integer chapterId;
-
-    /**
-     * 章节标题
-     */
-    private String chapterName;
-
-    /**
-     * 作品标签
-     */
-    private String workDescription;
-
-    /**
-     * 标签
-     */
-    private String tag;
-
-    /**
-     * 漫画作者
-     */
-    private String author;
-    /**
      * 点赞数
      */
     private Integer niceCount;
@@ -68,96 +48,37 @@ public class CartoonVo {
     private Integer collectionCount;
 
     /**
-     * 评论人的ID
+     * 漫画章节
      */
-    private Integer userId;
+    private List<ChapterDto> chapterDto;
 
     /**
-     * 评论人的昵称
+     * 作品标签
      */
-    private String nickName;
+    private List<String> workDescription;
 
     /**
-     * 评论人的头像
+     * 标签
      */
-    private String headImage;
+    private List<String> tag;
 
     /**
-     * 评论人写的内容
+     * 漫画作者
      */
-    private String content;
+    private List<String> author;
 
     /**
-     * 总的点赞数
+     * 评论列表
      */
-    private Integer likes;
+    private List<CommentDto> commentDtoList;
 
-    /**
-     * 总的回复数
-     */
-    private Integer replys;
-
-    public Integer getUserId() {
-        return userId;
+    public List<CommentDto> getCommentDtoList() {
+        return commentDtoList;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setCommentDtoList(List<CommentDto> commentDtoList) {
+        this.commentDtoList = commentDtoList;
     }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getHeadImage() {
-        return headImage;
-    }
-
-    public void setHeadImage(String headImage) {
-        this.headImage = headImage;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
-
-    public Integer getReplys() {
-        return replys;
-    }
-
-    public void setReplys(Integer replys) {
-        this.replys = replys;
-    }
-
-    public LocalDateTime getUserTime() {
-        return userTime;
-    }
-
-    public void setUserTime(LocalDateTime userTime) {
-        this.userTime = userTime;
-    }
-
-    /**
-     * 评论时间
-     */
-    private LocalDateTime userTime;
-
 
     /**
      * 上架时间
@@ -168,6 +89,14 @@ public class CartoonVo {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    public List<ChapterDto> getChapterDto() {
+        return chapterDto;
+    }
+
+    public void setChapterDto(List<ChapterDto> chapterDto) {
+        this.chapterDto = chapterDto;
+    }
 
     public Integer getId() {
         return id;
@@ -201,43 +130,27 @@ public class CartoonVo {
         this.describe = describe;
     }
 
-    public Integer getChapterId() {
-        return chapterId;
-    }
-
-    public void setChapterId(Integer chapterId) {
-        this.chapterId = chapterId;
-    }
-
-    public String getChapterName() {
-        return chapterName;
-    }
-
-    public void setChapterName(String chapterName) {
-        this.chapterName = chapterName;
-    }
-
-    public String getWorkDescription() {
+    public List<String> getWorkDescription() {
         return workDescription;
     }
 
-    public void setWorkDescription(String workDescription) {
+    public void setWorkDescription(List<String> workDescription) {
         this.workDescription = workDescription;
     }
 
-    public String getTag() {
+    public List<String> getTag() {
         return tag;
     }
 
-    public void setTag(String tag) {
+    public void setTag(List<String> tag) {
         this.tag = tag;
     }
 
-    public String getAuthor() {
+    public List<String> getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(List<String> author) {
         this.author = author;
     }
 
