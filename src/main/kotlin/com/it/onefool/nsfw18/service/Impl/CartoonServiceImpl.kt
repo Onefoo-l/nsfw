@@ -20,13 +20,16 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonServi
         private val log = LoggerFactory.getLogger(CartoonServiceImpl::class.java)
     }
 
+    /**
+     * 查看漫画id
+     */
     override fun findId(id: Int?): Result<Any> {
         id?.let {i ->
             val cartoonVo = CartoonVo()
             val lqw = LambdaQueryWrapper<Cartoon>()
             lqw.eq(Cartoon::getId, i)
             val cartoonOne = this.getOne(lqw)
-
+            // 尽量不用反射，线上影响性能
 
             return Result.ok(cartoonVo)
         }

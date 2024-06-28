@@ -1,4 +1,4 @@
-package com.it.onefool.nsfw18.common
+package com.it.onefool.nsfw18.common.constants
 
 /**
  * @Author linjiawei

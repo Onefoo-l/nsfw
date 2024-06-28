@@ -9,5 +9,8 @@ import com.it.onefool.nsfw18.domain.entry.Cartoon
  * @createDate 2024-06-25 02:49:19
  */
 interface CartoonService : IService<Cartoon?> {
+    /**
+     * 查看漫画id
+     */
     fun findId(id: Int?): Result<Any>
 }

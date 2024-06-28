@@ -1,7 +1,7 @@
 package com.it.onefool.nsfw18.utils
 
 import cn.hutool.core.util.IdUtil
-import com.it.onefool.nsfw18.common.CacheConstants
+import com.it.onefool.nsfw18.common.constants.CacheConstants
 import com.it.onefool.nsfw18.domain.dto.UserDto
 import com.it.onefool.nsfw18.domain.entry.User
 import com.it.onefool.nsfw18.domain.vo.LoginUserVo
