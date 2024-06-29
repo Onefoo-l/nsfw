@@ -9,5 +9,8 @@ import com.it.onefool.nsfw18.domain.entry.Chapter
  * @createDate 2024-06-25 16:51:07
  */
 interface ChapterService : IService<Chapter?>{
-    fun findById(id: Int) : Result<Chapter>
+    /**
+     * 根据漫画id查询章节信息
+     */
+    fun findByCartoonId(id: Int) : Result<List<Chapter?>>
 }
