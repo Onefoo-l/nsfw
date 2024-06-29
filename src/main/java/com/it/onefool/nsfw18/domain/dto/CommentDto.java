@@ -50,6 +50,14 @@ public class CommentDto {
 
     private List<CommentDto> childrenCommentList;
 
+    public List<CommentDto> getChildrenCommentList() {
+        return childrenCommentList;
+    }
+
+    public void setChildrenCommentList(List<CommentDto> childrenCommentList) {
+        this.childrenCommentList = childrenCommentList;
+    }
+
     public Integer getId() {
         return id;
     }

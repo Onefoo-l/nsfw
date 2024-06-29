@@ -19,6 +19,7 @@ import com.it.onefool.nsfw18.utils.BeanUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.lang.reflect.Field
 
 /**
  * @author 97436
@@ -58,35 +59,37 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonServi
             val cartoonVo = CartoonVo()
             val qwCartoon = QueryWrapper<Cartoon>()
             qwCartoon.eq("id", i)
-            val cartoonOne = this.getOne(qwCartoon)?.let {
+            this.getOne(qwCartoon)?.let {
                 // 尽量不用反射，线上影响性能
+                //漫画查询
                 beanUtils.copyCartoonAndCartoonVo(it, cartoonVo)
             } ?: run { throw CustomizeException(StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message()) }
-
-            val qwChapter = QueryWrapper<Chapter>()
-            qwCartoon.eq("cartoon_id", i)
-            chapterService.list(qwChapter)?.let {
+            // 漫画章节查询
+            chapterService.findByCartoonId(i).data?.let {
                 beanUtils.copyChapterAndCartoonVo(it, cartoonVo)
             }
-            val qwCartoonLabel = QueryWrapper<CartoonLabel>()
-            qwCartoonLabel.eq("cartoon_id", i)
-            cartoonLabelService.list(qwCartoonLabel)?.let { c ->
+            //漫画标签查询
+            cartoonLabelService.findByCartoonId(i).data?.let { c ->
                 val labelIds = c.map { it?.labelId }
-                val qwLabel = QueryWrapper<Label>()
-                qwLabel.`in`("id", labelIds)
-                labelService.list(qwLabel)?.let {
+                labelService.findById(labelIds).data.let {
                     beanUtils.copyLabelAndCartoonVo(it, cartoonVo)
                 }
             }
             // 调用评论业务逻辑层分页查询
-            val pageDto = PageRequestDto(1, 5, Comment().apply { cartoonId = i })
-            commentService.pageComment(pageDto).let {
-                beanUtils.copyCommentAndCartoonVo(it.data.list, cartoonVo)
-            }
-            val qwReply = QueryWrapper<CommentReply>()
-            qwReply.eq("cartoon_id", i)
-            commentReplyService.list(qwReply)?.let { c ->
-                commentReplyBuilder(cartoonVo)
+            // 回复评论是建立在有评论的情况下
+            reflexInfo(i,Comment())?.let {r->
+                commentService.pageComment(r).data?.let {
+                    beanUtils.copyCommentAndCartoonVo(it.list, cartoonVo)
+                    //调用回复评论业务逻辑层分页查询
+                    //TODD 表可以优化，以后重构优化
+                    reflexInfo(i,CommentReply())?.let {e ->
+                        commentReplyService.findByCommentId(i).data?.let { c ->
+                            commentReplyBuilder(c, cartoonVo)
+                        }
+                    }
+
+
+                }
             }
             return Result.ok(cartoonVo)
         }
@@ -97,7 +100,33 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonServi
     /**
      * 构建整个漫画的评论
      */
-    fun commentReplyBuilder(cartoonVo: CartoonVo) {
+    fun commentReplyBuilder(reply: List<CommentReply?>, cartoonVo: CartoonVo) {
+        val firstLevelComment = cartoonVo.commentDtoList
+        firstLevelComment.forEach {
 
+        }
+    }
+
+    /**
+     * 递归构建评论列表
+     */
+    fun commentBuilderTree() {}
+
+    /**
+     * 简化代码，必要时刻可以使用反射
+     */
+    fun <T> reflexInfo(id: Int, t: T): PageRequestDto<T?>? {
+        val clazz = t!!::class.java
+        val fields = clazz.declaredFields
+        fields.forEach {
+            if (it.name == "cartoonId") {
+                val clazzT = clazz.newInstance()
+                val cId = clazz.getDeclaredField("cartoonId")
+                cId.isAccessible = true
+                cId.set(clazzT,id)
+                return PageRequestDto(1, 5, clazzT)
+            }
+        }
+        return PageRequestDto(1, 5, null)
     }
 }

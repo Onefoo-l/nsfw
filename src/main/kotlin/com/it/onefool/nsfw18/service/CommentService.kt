@@ -11,5 +11,8 @@ import com.it.onefool.nsfw18.domain.entry.Comment
  * @createDate 2024-06-25 16:51:19
  */
 interface CommentService : IService<Comment?>{
-    fun pageComment(pageRequestDto: PageRequestDto<Comment>) : Result<PageInfo<Comment>>
+    /**
+     * 分页查询评论列表
+     */
+    fun pageComment(pageRequestDto: PageRequestDto<Comment?>) : Result<PageInfo<Comment>>
 }
