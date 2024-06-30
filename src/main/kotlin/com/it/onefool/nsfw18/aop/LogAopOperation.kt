@@ -2,6 +2,7 @@ package com.it.onefool.nsfw18.aop
 
 import com.alibaba.fastjson2.JSONObject
 import com.it.onefool.nsfw18.domain.entry.OperationLog
+import com.it.onefool.nsfw18.filter.ip.FilterFactory
 import com.it.onefool.nsfw18.queue.LogQueue
 import com.it.onefool.nsfw18.utils.JwtUtil
 import kotlinx.coroutines.*
@@ -36,6 +37,8 @@ class LogAopOperation {
     @Autowired
     private lateinit var jwtUtil: JwtUtil
 
+    @Autowired
+    private lateinit var filterFactory: FilterFactory
 
     @Pointcut("@annotation(com.it.onefool.nsfw18.aop.Log)")
     fun LogOperation() {
@@ -44,8 +47,6 @@ class LogAopOperation {
     // 后置通知
     @After("LogOperation()")
     fun afterLogOperation(joinPoint: JoinPoint) {
-        //创建协程的上下文
-        val coroutineScope = CoroutineScope(Dispatchers.IO)
         // 获取用户请求
         val requestAttributes = RequestContextHolder.getRequestAttributes() as? ServletRequestAttributes
         val request = requestAttributes?.request
@@ -63,29 +64,19 @@ class LogAopOperation {
             val userID = userDto?.userId ?: 0
             //获取用户当前ip
             val ipAddress = v.remoteAddr ?: "0.0.0.0"
-            coroutineScope.launch {
-                //调用第三方ip库获取用户城市  https://whatismyipaddress.com/ip/183.12.223.67
-                val uri = URI.create("https://cmp.inmobi.com/geoip")
-                val httpRequest = HttpRequest.newBuilder()
-                    .uri(uri)
-                    .header("Accept", "application/json") // 设置接受的内容类型
-                    .build()
-                val res = HttpClient.newHttpClient()
-                    .send(httpRequest, HttpResponse.BodyHandlers.ofString()).body()
-                res?.let {
-                    operation.userCity = JSONObject.parseObject(it).getString("city") ?: "未知"
-                } ?: run {
-                    operation.userCity = "未知"
-                }
-                withContext(Dispatchers.Default){
-                    operation.userId = userID
-                    operation.operationDescription = logAnnotationValue
-                    operation.userIp = ipAddress
-                    operation.createTime = LocalDateTime.now()
-                    operation.updateTime = LocalDateTime.now()
+
+            operation.userId = userID
+            operation.operationDescription = logAnnotationValue
+            operation.userIp = ipAddress
+            operation.createTime = LocalDateTime.now()
+            operation.updateTime = LocalDateTime.now()
+
+            filterFactory.builder(operation)
+
+
                     LogQueue.addLog(operation)
-                }
-            }
+
+
         }
     }
 }
