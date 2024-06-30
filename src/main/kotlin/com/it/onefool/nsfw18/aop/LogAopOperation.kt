@@ -64,19 +64,12 @@ class LogAopOperation {
             val userID = userDto?.userId ?: 0
             //获取用户当前ip
             val ipAddress = v.remoteAddr ?: "0.0.0.0"
-
             operation.userId = userID
             operation.operationDescription = logAnnotationValue
             operation.userIp = ipAddress
             operation.createTime = LocalDateTime.now()
             operation.updateTime = LocalDateTime.now()
-
             filterFactory.builder(operation)
-
-
-                    LogQueue.addLog(operation)
-
-
         }
     }
 }
