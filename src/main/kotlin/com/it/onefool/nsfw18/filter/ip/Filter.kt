@@ -13,6 +13,7 @@ abstract class Filter {
     }
 
     abstract fun doFilter(operation: OperationLog)
+    abstract fun doFilter(): Boolean
 
     abstract fun addOperation(operation: OperationLog)
 }

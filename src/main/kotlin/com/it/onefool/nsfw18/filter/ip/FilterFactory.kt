@@ -19,7 +19,6 @@ class FilterFactory {
     companion object {
         private val log = LoggerFactory.getLogger(FilterFactory::class.java)
         private val listFilter = mutableListOf<Filter>()
-
         //是否开启过滤器
         private val atomicBooleanValue = AtomicBoolean(false)
     }
@@ -42,9 +41,16 @@ class FilterFactory {
         atomicBooleanValue.set(boolean)
     }
 
+
     fun builder(operation : OperationLog) {
         listFilter.forEach {
             it.doFilter(operation)
+        }
+    }
+    //servlet过滤器使用
+    fun builder(){
+        listFilter.forEach {
+            it.doFilter()
         }
     }
 }

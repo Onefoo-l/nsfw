@@ -44,6 +44,12 @@ public class OperationLog implements Serializable {
     private String userCity;
 
     /**
+     * 是否成功访问
+     */
+    @TableField(value = "is_success")
+    private Integer isSuccess;
+
+    /**
      * 
      */
     @TableField(value = "create_time")
@@ -54,6 +60,14 @@ public class OperationLog implements Serializable {
      */
     @TableField(value = "update_time")
     private LocalDateTime updateTime;
+
+    public Integer getSuccess() {
+        return isSuccess;
+    }
+
+    public void setSuccess(Integer success) {
+        isSuccess = success;
+    }
 
     /**
      * 日志id
