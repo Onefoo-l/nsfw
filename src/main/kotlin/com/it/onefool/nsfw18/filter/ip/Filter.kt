@@ -13,7 +13,7 @@ abstract class Filter {
     }
 
     abstract fun doFilter(operation: OperationLog)
-    abstract fun doFilter(): Boolean
+    abstract fun doFilter(k: String): Int
 
     abstract fun addOperation(operation: OperationLog)
 }
