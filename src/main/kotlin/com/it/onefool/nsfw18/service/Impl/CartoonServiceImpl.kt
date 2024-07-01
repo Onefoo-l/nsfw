@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.it.onefool.nsfw18.common.PageRequestDto
 import com.it.onefool.nsfw18.common.Result
 import com.it.onefool.nsfw18.common.StatusCode
+import com.it.onefool.nsfw18.domain.dto.CommentDto
 import com.it.onefool.nsfw18.domain.entry.Cartoon
 import com.it.onefool.nsfw18.domain.entry.CartoonLabel
 import com.it.onefool.nsfw18.domain.entry.Chapter
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.lang.reflect.Field
+import kotlin.math.log
 
 /**
  * @author 97436
@@ -28,6 +30,9 @@ import java.lang.reflect.Field
  */
 @Service
 class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonService {
+    companion object {
+        private val logger = LoggerFactory.getLogger(CartoonServiceImpl::class.java)
+    }
 
     @Autowired
     private lateinit var beanUtils: BeanUtils
@@ -47,9 +52,6 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonServi
     @Autowired
     private lateinit var commentReplyService: CommentReplyService
 
-    companion object {
-        private val log = LoggerFactory.getLogger(CartoonServiceImpl::class.java)
-    }
 
     /**
      * 查看漫画id
@@ -82,35 +84,55 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonServi
                     beanUtils.copyCommentAndCartoonVo(it.list, cartoonVo)
                     //调用回复评论业务逻辑层分页查询
                     //TODD 表可以优化，以后重构优化
-                    reflexInfo(i,CommentReply())?.let {e ->
+                    /*reflexInfo(i,CommentReply())?.let {
                         commentReplyService.findByCommentId(i).data?.let { c ->
                             commentReplyBuilder(c, cartoonVo)
                         }
-                    }
-
-
+                    }*/
                 }
             }
+            logger.info("查询漫画信息,{}",cartoonVo)
             return Result.ok(cartoonVo)
         }
-
         return Result.error()
     }
 
-    /**
+/*    *//**
      * 构建整个漫画的评论
-     */
+     *//*
     fun commentReplyBuilder(reply: List<CommentReply?>, cartoonVo: CartoonVo) {
         val firstLevelComment = cartoonVo.commentDtoList
+        //遍历一级评论
         firstLevelComment.forEach {
-
+            val commentS = commentBuilderTree(reply,it)
+            //设置二级评论
+            cartoonVo.commentDtoList = commentS
         }
     }
 
-    /**
-     * 递归构建评论列表
-     */
-    fun commentBuilderTree() {}
+    *//**
+     * 构建回复评论列表
+     *//*
+    fun commentBuilderTree(reply: List<CommentReply?>,comment: CommentDto) : List<CommentDto> {
+        val children = mutableListOf<CommentDto>()
+        reply.forEach {
+            // 二级评论
+            if (it?.commentId == comment.id) {
+                val commentDto = CommentDto().apply {
+                    id = it?.id
+                    userId = it?.userId
+                    nickName = it?.nickName
+                    headImage = it?.headImage
+                    content = it?.content
+                    likes = it?.likes
+                    userTime = it?.createdTime
+                }
+                children.add(commentDto)
+            }
+            // 递归调用
+            commentBuilderTree(reply,commentDto)
+        }
+    }*/
 
     /**
      * 简化代码，必要时刻可以使用反射
