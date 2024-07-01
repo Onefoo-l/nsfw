@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 @Service
 class ChapterServiceImpl : ServiceImpl<ChapterMapper?, Chapter?>(), ChapterService{
     companion object{
-        private val log = LoggerFactory.getLogger(ChapterServiceImpl::class.java)
+        private val logger = LoggerFactory.getLogger(ChapterServiceImpl::class.java)
     }
 
     /**

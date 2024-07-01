@@ -16,6 +16,6 @@ import org.springframework.stereotype.Service
 class ImgAddressServiceImpl
     : ServiceImpl<ImgAddressMapper?, ImgAddress?>(), ImgAddressService {
     companion object {
-        private val log = LoggerFactory.getLogger(ImgAddressServiceImpl::class.java)
+        private val logger = LoggerFactory.getLogger(ImgAddressServiceImpl::class.java)
     }
 }

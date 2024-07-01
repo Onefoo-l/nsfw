@@ -16,6 +16,6 @@ import org.springframework.stereotype.Service
 class CommentLikeServiceImpl
     : ServiceImpl<CommentLikeMapper?, CommentLike?>(), CommentLikeService {
     companion object {
-        private val log = LoggerFactory.getLogger(CommentLikeServiceImpl::class.java)
+        private val logger = LoggerFactory.getLogger(CommentLikeServiceImpl::class.java)
     }
 }

@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service
 @Service
 class LabelServiceImpl : ServiceImpl<LabelMapper?, Label?>(), LabelService {
     companion object {
-        private val log = LoggerFactory.getLogger(LabelServiceImpl::class.java)
+        private val logger = LoggerFactory.getLogger(LabelServiceImpl::class.java)
     }
 
     @Autowired

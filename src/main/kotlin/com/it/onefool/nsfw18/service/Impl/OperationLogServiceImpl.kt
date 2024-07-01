@@ -21,7 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 class OperationLogServiceImpl
     : ServiceImpl<OperationLogMapper?, OperationLog?>(), OperationLogService {
     companion object {
-        private val log = LoggerFactory.getLogger(OperationLogServiceImpl::class.java)
+        private val logger = LoggerFactory.getLogger(OperationLogServiceImpl::class.java)
     }
 
     // 五分钟执行一次 上线后开启

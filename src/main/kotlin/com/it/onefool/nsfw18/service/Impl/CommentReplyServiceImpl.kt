@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service
 class CommentReplyServiceImpl
     : ServiceImpl<CommentReplyMapper?, CommentReply?>(), CommentReplyService {
     companion object {
-        private val log = LoggerFactory.getLogger(CommentReplyServiceImpl::class.java)
+        private val logger = LoggerFactory.getLogger(CommentReplyServiceImpl::class.java)
     }
 
     /**

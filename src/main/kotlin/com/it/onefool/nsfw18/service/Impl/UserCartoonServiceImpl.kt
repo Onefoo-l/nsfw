@@ -15,6 +15,6 @@ import org.springframework.stereotype.Service
 @Service
 class UserCartoonServiceImpl : ServiceImpl<UserCartoonMapper?, UserCartoon?>(), UserCartoonService {
     companion object {
-        private val log = LoggerFactory.getLogger(UserCartoonServiceImpl::class.java)
+        private val logger = LoggerFactory.getLogger(UserCartoonServiceImpl::class.java)
     }
 }

@@ -53,7 +53,7 @@ public class CommentReply implements Serializable {
      * 点赞数（回复本身的点赞数量）
      */
     @TableField(value = "likes")
-    private String likes;
+    private Integer likes;
 
     /**
      * 创建时间
@@ -154,14 +154,14 @@ public class CommentReply implements Serializable {
     /**
      * 点赞数（回复本身的点赞数量）
      */
-    public String getLikes() {
+    public Integer getLikes() {
         return likes;
     }
 
     /**
      * 点赞数（回复本身的点赞数量）
      */
-    public void setLikes(String likes) {
+    public void setLikes(Integer likes) {
         this.likes = likes;
     }
 

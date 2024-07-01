@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 class CartoonLabelServiceImpl :
     ServiceImpl<CartoonLabelMapper?, CartoonLabel?>(), CartoonLabelService {
     companion object {
-        private val log = LoggerFactory.getLogger(CartoonLabelServiceImpl::class.java)
+        private val logger = LoggerFactory.getLogger(CartoonLabelServiceImpl::class.java)
     }
     /**
      * 根据漫画ID查询标签ID
