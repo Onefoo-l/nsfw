@@ -47,6 +47,7 @@ class CommentReplyServiceImpl
             val page = Page<CommentReply>(pageSize, pageCurrent)
             val qwReply = QueryWrapper<CommentReply>()
             qwReply.eq("cartoon_id", it.commentId)
+                .eq("comment_id", it.commentId)
                 .orderByDesc("createdTime")
             this.page(page, qwReply)
             return Result.ok(
