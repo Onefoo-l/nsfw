@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.it.onefool.nsfw18.mapper.CartoonMapper">
+
+    <resultMap id="cartoonResultMap" type="com.it.onefool.nsfw18.domain.bo.CartoonBo">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="avatar" column="avatar"/>
+        <result property="readCount" column="read_count"/>
+        <result property="niceCount" column="nice_count"/>
+        <result property="collectionCount" column="collection_count"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <collection property="authors" ofType="java.lang.String">
+            <result column="author"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="findByCondition" resultType="Integer">
+        select
+        c.id
+        from
+        cartoon as c
+        join cartoon_label as cl
+        on cl.cartoon_id = c.id
+        join label as l
+        on cl.label_id = l.id
+        <where>
+            <if test="str != null &amp;&amp; str != ''">(
+                c.title like concat('%',#{str},'%')
+                or
+                l.author like concat('%',#{str},'%')
+                or
+                l.tag like concat('%',#{str},'%')
+                or
+                l.come_people like concat('%',#{str},'%'))
+            </if>
+        </where>
+        order by c.update_time desc
+        limit #{start},#{size}
+    </select>
+
+    <select id="findById" resultMap="cartoonResultMap">
+        select
+        c.id,
+        c.title,
+        c.avatar,
+        c.read_count,
+        c.nice_count,
+        c.collection_count,
+        c.create_time,
+        c.update_time,
+        l.author
+        from
+        cartoon as c
+        join cartoon_label as cl
+        on cl.cartoon_id = c.id
+        join label as l
+        on cl.label_id = l.id
+        WHERE
+        c.id IN
+        <foreach item="item" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        order by c.update_time desc
+    </select>
+
+    <select id="findByConditionCount" resultType="integer">
+        select
+        count(c.id)
+        from
+        cartoon as c
+        join cartoon_label as cl
+        on cl.cartoon_id = c.id
+        join label as l
+        on cl.label_id = l.id
+        <where>
+            <if test="str != null &amp;&amp; str != ''">(
+                c.title like concat('%',#{str},'%')
+                or
+                l.author like concat('%',#{str},'%')
+                or
+                l.tag like concat('%',#{str},'%')
+                or
+                l.come_people like concat('%',#{str},'%'))
+            </if>
+        </where>
+    </select>
+</mapper>

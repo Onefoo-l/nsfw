@@ -34,13 +34,13 @@ public class CartoonLabel implements Serializable {
     /**
      * 
      */
-    @TableField(value = "createTime")
+    @TableField(value = "create_time")
     private LocalDateTime createTime;
 
     /**
      * 
      */
-    @TableField(value = "updateTime")
+    @TableField(value = "update_time")
     private LocalDateTime updateTime;
 
 

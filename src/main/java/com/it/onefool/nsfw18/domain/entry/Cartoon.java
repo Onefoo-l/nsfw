@@ -34,7 +34,7 @@ public class Cartoon implements Serializable {
     /**
      * 漫画描述
      */
-    @TableField(value = "describe")
+    @TableField(value = "`describe`")
     private String describe;
 
     /**

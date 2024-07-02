@@ -193,4 +193,24 @@ public class CartoonVo {
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "CartoonVo{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", describe='" + describe + '\'' +
+                ", niceCount=" + niceCount +
+                ", readCount=" + readCount +
+                ", collectionCount=" + collectionCount +
+                ", chapterDto=" + chapterDto +
+                ", workDescription=" + workDescription +
+                ", tag=" + tag +
+                ", author=" + author +
+                ", commentDtoList=" + commentDtoList +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

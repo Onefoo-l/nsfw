@@ -1,9 +1,12 @@
 package com.it.onefool.nsfw18.utils
 
+import com.it.onefool.nsfw18.common.StatusCode
+import com.it.onefool.nsfw18.domain.bo.CartoonBo
 import com.it.onefool.nsfw18.domain.dto.ChapterDto
 import com.it.onefool.nsfw18.domain.dto.CommentDto
 import com.it.onefool.nsfw18.domain.entry.*
 import com.it.onefool.nsfw18.domain.vo.CartoonVo
+import com.it.onefool.nsfw18.exception.CustomizeException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -81,6 +84,30 @@ class BeanUtils {
             }
         }
         cartoonVo.commentDtoList = commentList
+    }
+
+    /**
+     * 漫画BO和漫画vo的复制
+     */
+    fun copyCartoonBoAndCartoonVo(cartoonBoList: List<CartoonBo?>, cartoonVoList: MutableList<CartoonVo>) {
+        cartoonBoList.forEach {c ->
+            c?.let {
+                val cartoonVo = CartoonVo().apply {
+                    id = it.id
+                    title = it.title
+                    avatar = it.avatar
+                    niceCount = it.niceCount
+                    readCount = it.readCount
+                    collectionCount = it.collectionCount
+                    createTime = it.createTime
+                    updateTime = it.updateTime
+                    author = it.authors
+                }
+                cartoonVoList.add(cartoonVo)
+            } ?: run {
+                throw CustomizeException(StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message())
+            }
+        }
     }
 
 }

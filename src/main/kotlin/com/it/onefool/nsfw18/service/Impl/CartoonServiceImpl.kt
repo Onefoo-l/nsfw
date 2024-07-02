@@ -1,10 +1,13 @@
 package com.it.onefool.nsfw18.service.Impl
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
+import com.it.onefool.nsfw18.common.PageInfo
 import com.it.onefool.nsfw18.common.PageRequestDto
 import com.it.onefool.nsfw18.common.Result
 import com.it.onefool.nsfw18.common.StatusCode
+import com.it.onefool.nsfw18.domain.bo.CartoonBo
 import com.it.onefool.nsfw18.domain.dto.CommentDto
 import com.it.onefool.nsfw18.domain.entry.Cartoon
 import com.it.onefool.nsfw18.domain.entry.CartoonLabel
@@ -29,7 +32,7 @@ import kotlin.math.log
  * @createDate 2024-06-25 02:49:19
  */
 @Service
-class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonService {
+class CartoonServiceImpl : ServiceImpl<CartoonMapper, Cartoon>(), CartoonService {
     companion object {
         private val logger = LoggerFactory.getLogger(CartoonServiceImpl::class.java)
     }
@@ -52,11 +55,13 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonServi
     @Autowired
     private lateinit var commentReplyService: CommentReplyService
 
+    @Autowired
+    private lateinit var cartoonMapper: CartoonMapper
 
     /**
      * 查看漫画id
      */
-    override fun findId(id: Int?): Result<Any> {
+    override fun findId(id: Int?): Result<CartoonVo> {
         id?.let { i ->
             val cartoonVo = CartoonVo()
             val qwCartoon = QueryWrapper<Cartoon>()
@@ -79,7 +84,7 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonServi
             }
             // 调用评论业务逻辑层分页查询
             // 回复评论是建立在有评论的情况下
-            reflexInfo(i,Comment())?.let {r->
+            reflexInfo(i, Comment())?.let { r ->
                 commentService.pageComment(r).data?.let {
                     beanUtils.copyCommentAndCartoonVo(it.list, cartoonVo)
                     //调用回复评论业务逻辑层分页查询
@@ -91,48 +96,205 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonServi
                     }*/
                 }
             }
-            logger.info("查询漫画信息,{}",cartoonVo)
+            logger.info("查询漫画信息,{}", cartoonVo.toString())
             return Result.ok(cartoonVo)
         }
         return Result.error()
     }
 
-/*    *//**
-     * 构建整个漫画的评论
-     *//*
-    fun commentReplyBuilder(reply: List<CommentReply?>, cartoonVo: CartoonVo) {
-        val firstLevelComment = cartoonVo.commentDtoList
-        //遍历一级评论
-        firstLevelComment.forEach {
-            val commentS = commentBuilderTree(reply,it)
-            //设置二级评论
-            cartoonVo.commentDtoList = commentS
+    /**
+     * 查询最近更新的漫画
+     */
+    override fun findByUpdateTime(pageCarton: PageRequestDto<Cartoon>)
+            : Result<PageInfo<Cartoon>> {
+        val pageSize = pageCarton.size
+        val pageSum = pageCarton.page
+        val data = pageCarton.body
+        data?.let {
+            val page = Page<Cartoon>(pageSize, pageSum)
+            val qwCartoon = QueryWrapper<Cartoon>()
+            qwCartoon.orderByDesc("update_time")
+            this.page(page, qwCartoon)
+            return Result.ok(
+                PageInfo(
+                    //当前页
+                    page.current,
+                    //每页显示条数
+                    page.size,
+                    //总数
+                    page.total,
+                    //总页数
+                    page.pages,
+                    page.records
+                )
+            )
         }
+        return Result.error(StatusCode.NOT_FOUND)
     }
 
-    *//**
-     * 构建回复评论列表
-     *//*
-    fun commentBuilderTree(reply: List<CommentReply?>,comment: CommentDto) : List<CommentDto> {
-        val children = mutableListOf<CommentDto>()
-        reply.forEach {
-            // 二级评论
-            if (it?.commentId == comment.id) {
-                val commentDto = CommentDto().apply {
-                    id = it?.id
-                    userId = it?.userId
-                    nickName = it?.nickName
-                    headImage = it?.headImage
-                    content = it?.content
-                    likes = it?.likes
-                    userTime = it?.createdTime
-                }
-                children.add(commentDto)
-            }
-            // 递归调用
-            commentBuilderTree(reply,commentDto)
+    /**
+     * 查询最多人观看的漫画
+     */
+    override fun findManyRead(pageCarton: PageRequestDto<Cartoon>): Result<PageInfo<Cartoon>> {
+        val pageSize = pageCarton.size
+        val pageSum = pageCarton.page
+        val data = pageCarton.body
+        data?.let {
+            val page = Page<Cartoon>(pageSize, pageSum)
+            val qwCartoon = QueryWrapper<Cartoon>()
+            qwCartoon.orderByDesc("read_count")
+            this.page(page, qwCartoon)
+            return Result.ok(
+                PageInfo(
+                    //当前页
+                    page.current,
+                    //每页显示条数
+                    page.size,
+                    //总数
+                    page.total,
+                    //总页数
+                    page.pages,
+                    page.records
+                )
+            )
         }
-    }*/
+        return Result.error(StatusCode.NOT_FOUND)
+    }
+
+    /**
+     * 查询最多人收藏的漫画
+     */
+    override fun findManyCollection(pageCarton: PageRequestDto<Cartoon>): Result<PageInfo<Cartoon>> {
+        val pageSize = pageCarton.size
+        val pageSum = pageCarton.page
+        val data = pageCarton.body
+        data?.let {
+            val page = Page<Cartoon>(pageSize, pageSum)
+            val qwCartoon = QueryWrapper<Cartoon>()
+            qwCartoon.orderByDesc("collection_count")
+            this.page(page, qwCartoon)
+            return Result.ok(
+                PageInfo(
+                    //当前页
+                    page.current,
+                    //每页显示条数
+                    page.size,
+                    //总数
+                    page.total,
+                    //总页数
+                    page.pages,
+                    page.records
+                )
+            )
+        }
+        return Result.error(StatusCode.NOT_FOUND)
+    }
+
+    /**
+     * 查询最多人点赞的漫画
+     */
+    override fun findManyNice(pageCarton: PageRequestDto<Cartoon>): Result<PageInfo<Cartoon>> {
+        val pageSize = pageCarton.size
+        val pageSum = pageCarton.page
+        val data = pageCarton.body
+        data?.let {
+            val page = Page<Cartoon>(pageSize, pageSum)
+            val qwCartoon = QueryWrapper<Cartoon>()
+            qwCartoon.orderByDesc("nice_count")
+            this.page(page, qwCartoon)
+            return Result.ok(
+                PageInfo(
+                    //当前页
+                    page.current,
+                    //每页显示条数
+                    page.size,
+                    //总数
+                    page.total,
+                    //总页数
+                    page.pages,
+                    page.records
+                )
+            )
+        }
+        return Result.error(StatusCode.NOT_FOUND)
+    }
+
+    /**
+     * 多条件查询(优先级 1.漫画名称 2.漫画作者 3.标签 4.漫画人物)
+     */
+    override fun findByCondition(
+        str: String,
+        pageSize: Long, //条数
+        pageSum: Long //页数
+    ): Result<PageInfo<CartoonVo>> {
+        val cartoonVoList = mutableListOf<CartoonVo>()
+        // 从第几个开始
+        val offset = (pageSum - 1) * pageSize
+        //建议join不超过三张表  分页查询后的Id集合
+        val cartoonBoIds = cartoonMapper.findByCondition(str, offset, pageSize)
+        cartoonBoIds?.let {
+            val cartoonBoList = cartoonMapper.findById(it)
+            beanUtils.copyCartoonBoAndCartoonVo(cartoonBoList, cartoonVoList)
+        } ?: run {
+            throw CustomizeException(
+                StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message()
+            )
+        }
+        val cartoonBoCount = cartoonMapper.findByConditionCount(str)
+        val totalPages = if ((cartoonBoCount % pageSize).toInt() == 0)
+            (cartoonBoCount / pageSize) else (cartoonBoCount / pageSize + 1)
+        logger.info(
+            "分页查询信息,{},{},{},{},{}", pageSum,
+            pageSize,
+            cartoonBoCount.toLong(),
+            totalPages,
+            cartoonVoList
+        )
+        return Result.ok(
+            PageInfo<CartoonVo>(
+                pageSum,
+                pageSize,
+                cartoonBoCount.toLong(),
+                totalPages,
+                cartoonVoList
+            )
+        )
+    }
+
+
+    /*     //构建整个漫画的评论
+        fun commentReplyBuilder(reply: List<CommentReply?>, cartoonVo: CartoonVo) {
+            val firstLevelComment = cartoonVo.commentDtoList
+            //遍历一级评论
+            firstLevelComment.forEach {
+                val commentS = commentBuilderTree(reply,it)
+                //设置二级评论
+                cartoonVo.commentDtoList = commentS
+            }
+        }
+
+
+        //构建回复评论列表
+        fun commentBuilderTree(reply: List<CommentReply?>,comment: CommentDto) : List<CommentDto> {
+            val children = mutableListOf<CommentDto>()
+            reply.forEach {
+                // 二级评论
+                if (it?.commentId == comment.id) {
+                    val commentDto = CommentDto().apply {
+                        id = it?.id
+                        userId = it?.userId
+                        nickName = it?.nickName
+                        headImage = it?.headImage
+                        content = it?.content
+                        likes = it?.likes
+                        userTime = it?.createdTime
+                    }
+                    children.add(commentDto)
+                }
+                // 递归调用
+                commentBuilderTree(reply,commentDto)
+            }
+        }*/
 
     /**
      * 简化代码，必要时刻可以使用反射
@@ -145,7 +307,7 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper?, Cartoon?>(), CartoonServi
                 val clazzT = clazz.newInstance()
                 val cId = clazz.getDeclaredField("cartoonId")
                 cId.isAccessible = true
-                cId.set(clazzT,id)
+                cId.set(clazzT, id)
                 return PageRequestDto(1, 5, clazzT)
             }
         }
