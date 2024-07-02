@@ -32,6 +32,11 @@ public class Label implements Serializable {
     private String tag;
 
     /**
+     * 登场人物
+     */
+    @TableField(value = "come_people")
+    private String comePeople;
+    /**
      * 漫画作者
      */
     @TableField(value = "author")
@@ -50,9 +55,14 @@ public class Label implements Serializable {
     private LocalDateTime updateTime;
 
 
-    /**
-     * 
-     */
+    public String getComePeople() {
+        return comePeople;
+    }
+
+    public void setComePeople(String comePeople) {
+        this.comePeople = comePeople;
+    }
+
     public Integer getId() {
         return id;
     }
