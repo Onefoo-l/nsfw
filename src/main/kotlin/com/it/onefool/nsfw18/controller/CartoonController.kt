@@ -1,5 +1,6 @@
 package com.it.onefool.nsfw18.controller
 
+import com.it.onefool.nsfw18.aop.Log
 import com.it.onefool.nsfw18.common.PageInfo
 import com.it.onefool.nsfw18.common.PageRequestDto
 import com.it.onefool.nsfw18.common.Result
@@ -42,6 +43,7 @@ class CartoonController : AbstractCoreController<Cartoon>() {
      * 查看漫画id
      */
     @GetMapping("/findId/{id}")
+    @Log("查看漫画id")
     fun findId(@PathVariable id: Int?): Result<CartoonVo> {
         return cartoonService.findId(id)
     }
@@ -50,6 +52,7 @@ class CartoonController : AbstractCoreController<Cartoon>() {
      * 查询最近更新的漫画
      */
     @PostMapping("/findNew")
+    @Log("查询最近更新的漫画")
     fun findByUpdateTime(
         @RequestBody pageCarton: PageRequestDto<Cartoon>
     ): Result<PageInfo<Cartoon>> {
@@ -60,6 +63,7 @@ class CartoonController : AbstractCoreController<Cartoon>() {
      * 查询最多人观看的漫画
      */
     @PostMapping("/findRead")
+    @Log("查询最多人观看的漫画")
     fun findManyRead(
         @RequestBody pageCarton: PageRequestDto<Cartoon>
     ): Result<PageInfo<Cartoon>> {
@@ -70,6 +74,7 @@ class CartoonController : AbstractCoreController<Cartoon>() {
      * 查询最多人收藏的漫画
      */
     @PostMapping("/findCollection")
+    @Log("查询最多人收藏的漫画")
     fun findManyCollection(
         @RequestBody pageCarton: PageRequestDto<Cartoon>
     ): Result<PageInfo<Cartoon>> {
@@ -80,6 +85,7 @@ class CartoonController : AbstractCoreController<Cartoon>() {
      * 查询最多人点赞的漫画
      */
     @PostMapping("/findNice")
+    @Log("查询最多人点赞的漫画")
     fun findManyNice(
         @RequestBody pageCarton: PageRequestDto<Cartoon>
     ): Result<PageInfo<Cartoon>> {
@@ -91,6 +97,7 @@ class CartoonController : AbstractCoreController<Cartoon>() {
      * type 0:全站查询  1:根据漫画名称查询  2:根据漫画作者查询  3:根据标签查询  4:根据漫画人物查询
      */
     @GetMapping("/findCondition/{str}/{pages}/{size}/{type}")
+    @Log("多条件查询")
     fun findByCondition(
         @PathVariable str: String?,
         @PathVariable pages: Long?, // 页码
@@ -101,7 +108,6 @@ class CartoonController : AbstractCoreController<Cartoon>() {
         val sizes = if (size == null || size.toInt() == 0) 1 else size
         str?.let {
             type?.let {
-                // 全站查询
                 return cartoonService.findByCondition(str,sum,sizes,type)
             }
         }

@@ -56,5 +56,13 @@ class ResponseConstants {
          * 没有评论资源
          */
         val NOT_FOUND_COMMENT = "没有评论资源"
+        /**
+         * 标签类型或标签参数异常
+         */
+        val LABEL_PARAM_ERROR = "标签类型或标签参数异常"
+        /**
+         * 标签类型或标签参数异常
+         */
+        val ADD_LABEL_ERROR = "添加标签失败"
     }
 }
