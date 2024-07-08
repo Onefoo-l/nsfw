@@ -12,7 +12,46 @@ import org.apache.ibatis.annotations.Param
  * @Entity generator.domain.Cartoon
  */
 interface CartoonMapper : BaseMapper<Cartoon?> {
+    /**
+     * 全站查询
+     */
     fun findByCondition(
+        @Param("str") str: String,
+        @Param("start") start: Long,
+        @Param("size") size: Long
+    ): List<Int>?
+
+    /**
+     * 根据作者名称查询
+     */
+    fun findByConditionAuthor(
+        @Param("str") str: String,
+        @Param("start") start: Long,
+        @Param("size") size: Long
+    ): List<Int>?
+
+    /**
+     * 根据标签查询
+     */
+    fun findByConditionTag(
+        @Param("str") str: String,
+        @Param("start") start: Long,
+        @Param("size") size: Long
+    ): List<Int>?
+
+    /**
+     * 根据漫画名称查询
+     */
+    fun findByConditionName(
+        @Param("str") str: String,
+        @Param("start") start: Long,
+        @Param("size") size: Long
+    ): List<Int>?
+
+    /**
+     * 根据人物查询
+     */
+    fun findByConditionPeople(
         @Param("str") str: String,
         @Param("start") start: Long,
         @Param("size") size: Long

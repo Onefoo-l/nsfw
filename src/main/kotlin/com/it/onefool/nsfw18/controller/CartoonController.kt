@@ -88,17 +88,22 @@ class CartoonController : AbstractCoreController<Cartoon>() {
 
     /**
      * 多条件查询(优先级 1.漫画名称 2.漫画作者 3.标签 4.漫画人物)
+     * type 0:全站查询  1:根据漫画名称查询  2:根据漫画作者查询  3:根据标签查询  4:根据漫画人物查询
      */
-    @GetMapping("/findCondition/{str}/{pageSize}/{pageSum}")
+    @GetMapping("/findCondition/{str}/{pages}/{size}/{type}")
     fun findByCondition(
         @PathVariable str: String?,
-        @PathVariable pageSize: Long?,
-        @PathVariable pageSum: Long?
+        @PathVariable pages: Long?, // 页码
+        @PathVariable size: Long?, // 每页条数
+        @PathVariable type: Int?
     ): Result<PageInfo<CartoonVo>> {
-        val size = pageSize ?: 10
-        val sum = pageSum ?: 1
+        val sum = if (pages == null || pages.toInt() == 0) 1 else pages
+        val sizes = if (size == null || size.toInt() == 0) 1 else size
         str?.let {
-            return cartoonService.findByCondition(str,size,sum)
+            type?.let {
+                // 全站查询
+                return cartoonService.findByCondition(str,sum,sizes,type)
+            }
         }
         return Result.error(StatusCode.PARAM_ERROR)
     }

@@ -43,6 +43,79 @@
         limit #{start},#{size}
     </select>
 
+    <select id="findByConditionPeople" resultType="Integer">
+        select
+        c.id
+        from
+        cartoon as c
+        join cartoon_label as cl
+        on cl.cartoon_id = c.id
+        join label as l
+        on cl.label_id = l.id
+        <where>
+            <if test="str != null &amp;&amp; str != ''">(
+                l.come_people like concat('%',#{str},'%'))
+            </if>
+        </where>
+        order by c.update_time desc
+        limit #{start},#{size}
+    </select>
+
+    <select id="findByConditionName" resultType="Integer">
+        select
+        c.id
+        from
+        cartoon as c
+        join cartoon_label as cl
+        on cl.cartoon_id = c.id
+        join label as l
+        on cl.label_id = l.id
+        <where>
+            <if test="str != null &amp;&amp; str != ''">(
+                c.title like concat('%',#{str},'%'))
+            </if>
+        </where>
+        order by c.update_time desc
+        limit #{start},#{size}
+    </select>
+
+    <select id="findByConditionTag" resultType="Integer">
+        select
+        c.id
+        from
+        cartoon as c
+        join cartoon_label as cl
+        on cl.cartoon_id = c.id
+        join label as l
+        on cl.label_id = l.id
+        <where>
+            <if test="str != null &amp;&amp; str != ''">(
+                l.tag like concat('%',#{str},'%'))
+            </if>
+        </where>
+        order by c.update_time desc
+        limit #{start},#{size}
+    </select>
+
+
+    <select id="findByConditionAuthor" resultType="Integer">
+        select
+        c.id
+        from
+        cartoon as c
+        join cartoon_label as cl
+        on cl.cartoon_id = c.id
+        join label as l
+        on cl.label_id = l.id
+        <where>
+            <if test="str != null &amp;&amp; str != ''">(
+                l.author like concat('%',#{str},'%'))
+            </if>
+        </where>
+        order by c.update_time desc
+        limit #{start},#{size}
+    </select>
+
     <select id="findById" resultMap="cartoonResultMap">
         select
         c.id,

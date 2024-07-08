@@ -41,5 +41,5 @@ interface CartoonService : IService<Cartoon> {
     /**
      * 多条件查询(优先级 1.漫画名称 2.漫画作者 3.标签 4.漫画人物)
      */
-    fun findByCondition(str: String, pageSize: Long, pageSum: Long): Result<PageInfo<CartoonVo>>
+    fun findByCondition(str: String, pages: Long, size: Long, type: Int): Result<PageInfo<CartoonVo>>
 }

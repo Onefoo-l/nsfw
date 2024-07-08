@@ -15,10 +15,12 @@ import com.it.onefool.nsfw18.domain.entry.Chapter
 import com.it.onefool.nsfw18.domain.entry.Comment
 import com.it.onefool.nsfw18.domain.entry.CommentReply
 import com.it.onefool.nsfw18.domain.entry.Label
+import com.it.onefool.nsfw18.domain.pojo.FindCartoonConditionType
 import com.it.onefool.nsfw18.domain.vo.CartoonVo
 import com.it.onefool.nsfw18.exception.CustomizeException
 import com.it.onefool.nsfw18.mapper.CartoonMapper
 import com.it.onefool.nsfw18.service.*
+import com.it.onefool.nsfw18.strategy.cartoon.ConditionTypeFactory
 import com.it.onefool.nsfw18.utils.BeanUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -57,6 +59,9 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper, Cartoon>(), CartoonService
 
     @Autowired
     private lateinit var cartoonMapper: CartoonMapper
+
+    @Autowired
+    private lateinit var conditionTypeFactory: ConditionTypeFactory
 
     /**
      * 查看漫画id
@@ -221,17 +226,23 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper, Cartoon>(), CartoonService
 
     /**
      * 多条件查询(优先级 1.漫画名称 2.漫画作者 3.标签 4.漫画人物)
+     * 0:全站查询  1:根据漫画名称查询  2:根据漫画作者查询  3:根据标签查询  4:根据漫画人物查询
      */
     override fun findByCondition(
         str: String,
-        pageSize: Long, //条数
-        pageSum: Long //页数
+        pages: Long, //页数
+        size: Long, //条数
+        //0:全站查询  1:根据漫画名称查询  2:根据漫画作者查询  3:根据标签查询  4:根据漫画人物查询
+        // (判断不在dao层做处理，避免数据库做复杂处理)
+        type: Int
     ): Result<PageInfo<CartoonVo>> {
         val cartoonVoList = mutableListOf<CartoonVo>()
         // 从第几个开始
-        val offset = (pageSum - 1) * pageSize
+        val start = (pages - 1) * size
+        val service = conditionTypeFactory.getCartoonService(FindCartoonConditionType.fromInt(type))
         //建议join不超过三张表  分页查询后的Id集合
-        val cartoonBoIds = cartoonMapper.findByCondition(str, offset, pageSize)
+        val cartoonBoIds = service.findByConditionType(str, start, size)
+//        val cartoonBoIds = cartoonMapper.findByCondition(str, start, size)
         cartoonBoIds?.let {
             val cartoonBoList = cartoonMapper.findById(it)
             beanUtils.copyCartoonBoAndCartoonVo(cartoonBoList, cartoonVoList)
@@ -241,19 +252,12 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper, Cartoon>(), CartoonService
             )
         }
         val cartoonBoCount = cartoonMapper.findByConditionCount(str)
-        val totalPages = if ((cartoonBoCount % pageSize).toInt() == 0)
-            (cartoonBoCount / pageSize) else (cartoonBoCount / pageSize + 1)
-        logger.info(
-            "分页查询信息,{},{},{},{},{}", pageSum,
-            pageSize,
-            cartoonBoCount.toLong(),
-            totalPages,
-            cartoonVoList
-        )
+        val totalPages = if ((cartoonBoCount % size).toInt() == 0)
+            (cartoonBoCount / size) else (cartoonBoCount / size + 1)
         return Result.ok(
             PageInfo<CartoonVo>(
-                pageSum,
-                pageSize,
+                pages,
+                size,
                 cartoonBoCount.toLong(),
                 totalPages,
                 cartoonVoList
