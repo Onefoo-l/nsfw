@@ -13,4 +13,9 @@ interface CartoonLabelService : IService<CartoonLabel?>{
      * 根据漫画ID查询标签ID
      */
     fun findByCartoonId(id: Int): Result<List<CartoonLabel?>?>
+
+    /**
+     * 插入漫画id和标签id
+     */
+    fun addCartoonIdAndLabelId(cartoonId: Int,labelId: Int)
 }
