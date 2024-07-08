@@ -243,14 +243,12 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper, Cartoon>(), CartoonService
         //建议join不超过三张表  分页查询后的Id集合
         val cartoonBoIds = service.findByConditionType(str, start, size)
 //        val cartoonBoIds = cartoonMapper.findByCondition(str, start, size)
-        cartoonBoIds?.let {
-            val cartoonBoList = cartoonMapper.findById(it)
-            beanUtils.copyCartoonBoAndCartoonVo(cartoonBoList, cartoonVoList)
-        } ?: run {
-            throw CustomizeException(
-                StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message()
-            )
-        }
+        if (cartoonBoIds.isEmpty()) throw CustomizeException(
+            StatusCode.NOT_FOUND.code(),
+            StatusCode.NOT_FOUND.message()
+        )
+        val cartoonBoList = cartoonMapper.findById(cartoonBoIds)
+        beanUtils.copyCartoonBoAndCartoonVo(cartoonBoList, cartoonVoList)
         val cartoonBoCount = cartoonMapper.findByConditionCount(str)
         val totalPages = if ((cartoonBoCount % size).toInt() == 0)
             (cartoonBoCount / size) else (cartoonBoCount / size + 1)

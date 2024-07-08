@@ -29,7 +29,7 @@
         join label as l
         on cl.label_id = l.id
         <where>
-            <if test="str != null &amp;&amp; str != ''">(
+            <if test="str != null and str != ''">(
                 c.title like concat('%',#{str},'%')
                 or
                 l.author like concat('%',#{str},'%')
@@ -53,7 +53,7 @@
         join label as l
         on cl.label_id = l.id
         <where>
-            <if test="str != null &amp;&amp; str != ''">(
+            <if test="str != null and str != ''">(
                 l.come_people like concat('%',#{str},'%'))
             </if>
         </where>
@@ -71,7 +71,7 @@
         join label as l
         on cl.label_id = l.id
         <where>
-            <if test="str != null &amp;&amp; str != ''">(
+            <if test="str != null and str != ''">(
                 c.title like concat('%',#{str},'%'))
             </if>
         </where>
@@ -89,7 +89,7 @@
         join label as l
         on cl.label_id = l.id
         <where>
-            <if test="str != null &amp;&amp; str != ''">(
+            <if test="str != null and str != ''">(
                 l.tag like concat('%',#{str},'%'))
             </if>
         </where>
@@ -108,12 +108,12 @@
         join label as l
         on cl.label_id = l.id
         <where>
-            <if test="str != null &amp;&amp; str != ''">(
-                l.author like concat('%',#{str},'%'))
+            <if test="str != null and str != ''">
+                l.author like concat('%',#{str},'%')
             </if>
+            order by c.update_time desc
+            limit #{start},#{size}
         </where>
-        order by c.update_time desc
-        limit #{start},#{size}
     </select>
 
     <select id="findById" resultMap="cartoonResultMap">
@@ -151,7 +151,7 @@
         join label as l
         on cl.label_id = l.id
         <where>
-            <if test="str != null &amp;&amp; str != ''">(
+            <if test="str != null and str != ''">(
                 c.title like concat('%',#{str},'%')
                 or
                 l.author like concat('%',#{str},'%')

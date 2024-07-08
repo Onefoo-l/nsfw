@@ -23,7 +23,7 @@ class TagConditionType : AbstractCartoonTemplate(){
         return FindCartoonConditionType.TAG
     }
 
-    override fun findByConditionType(str: String, start: Long, size: Long): List<Int>? {
+    override fun findByConditionType(str: String, start: Long, size: Long): List<Int?> {
         return cartoonMapper.findByConditionTag(str,start,size)
     }
 }

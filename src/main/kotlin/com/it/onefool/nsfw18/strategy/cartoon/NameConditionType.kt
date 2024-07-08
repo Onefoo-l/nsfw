@@ -23,7 +23,7 @@ class NameConditionType : AbstractCartoonTemplate(){
         return FindCartoonConditionType.CARTOON_NAME
     }
 
-    override fun findByConditionType(str: String, start: Long, size: Long): List<Int>? {
+    override fun findByConditionType(str: String, start: Long, size: Long): List<Int?> {
         return cartoonMapper.findByConditionName(str, start, size)
     }
 }

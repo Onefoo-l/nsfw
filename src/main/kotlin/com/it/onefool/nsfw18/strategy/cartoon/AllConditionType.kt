@@ -25,7 +25,7 @@ class AllConditionType : AbstractCartoonTemplate(){
     /**
      * 全站查询
      */
-    override fun findByConditionType(str: String, start: Long, size: Long): List<Int>? {
+    override fun findByConditionType(str: String, start: Long, size: Long): List<Int?> {
         return cartoonMapper.findByCondition(str, start, size)
     }
 

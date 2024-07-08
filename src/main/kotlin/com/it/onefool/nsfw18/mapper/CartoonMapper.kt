@@ -19,7 +19,7 @@ interface CartoonMapper : BaseMapper<Cartoon?> {
         @Param("str") str: String,
         @Param("start") start: Long,
         @Param("size") size: Long
-    ): List<Int>?
+    ): List<Int?>
 
     /**
      * 根据作者名称查询
@@ -28,7 +28,7 @@ interface CartoonMapper : BaseMapper<Cartoon?> {
         @Param("str") str: String,
         @Param("start") start: Long,
         @Param("size") size: Long
-    ): List<Int>?
+    ): List<Int?>
 
     /**
      * 根据标签查询
@@ -37,7 +37,7 @@ interface CartoonMapper : BaseMapper<Cartoon?> {
         @Param("str") str: String,
         @Param("start") start: Long,
         @Param("size") size: Long
-    ): List<Int>?
+    ): List<Int?>
 
     /**
      * 根据漫画名称查询
@@ -46,7 +46,7 @@ interface CartoonMapper : BaseMapper<Cartoon?> {
         @Param("str") str: String,
         @Param("start") start: Long,
         @Param("size") size: Long
-    ): List<Int>?
+    ): List<Int?>
 
     /**
      * 根据人物查询
@@ -55,12 +55,12 @@ interface CartoonMapper : BaseMapper<Cartoon?> {
         @Param("str") str: String,
         @Param("start") start: Long,
         @Param("size") size: Long
-    ): List<Int>?
+    ): List<Int?>
 
     /**
      * 根据漫画id查询漫画信息
      */
-    fun findById(ids: List<Int>): List<CartoonBo?>
+    fun findById(ids: List<Int?>): List<CartoonBo?>
 
     /**
      * 根据条件查询漫画总数

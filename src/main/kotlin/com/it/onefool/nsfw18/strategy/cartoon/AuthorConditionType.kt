@@ -12,18 +12,19 @@ import org.springframework.stereotype.Component
  * 根据作者名称查询
  */
 @Component
-class AuthorConditionType : AbstractCartoonTemplate(){
+class AuthorConditionType : AbstractCartoonTemplate() {
 
-    companion object{
+    companion object {
         private val log = LoggerFactory.getLogger(AuthorConditionType::class.java)
     }
+
     @Autowired
     private lateinit var cartoonMapper: CartoonMapper
     override fun support(): FindCartoonConditionType {
         return FindCartoonConditionType.CARTOON_AUTHOR
     }
 
-    override fun findByConditionType(str: String, start: Long, size: Long): List<Int>? {
-        return cartoonMapper.findByConditionAuthor(str,start,size);
+    override fun findByConditionType(str: String, start: Long, size: Long): List<Int?> {
+        return cartoonMapper.findByConditionAuthor(str, start, size);
     }
 }

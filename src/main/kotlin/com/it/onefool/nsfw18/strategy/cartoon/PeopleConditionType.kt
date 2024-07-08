@@ -23,7 +23,7 @@ class PeopleConditionType : AbstractCartoonTemplate(){
         return FindCartoonConditionType.CARTOON_PEOPLE
     }
 
-    override fun findByConditionType(str: String, start: Long, size: Long): List<Int>? {
+    override fun findByConditionType(str: String, start: Long, size: Long): List<Int?> {
         return cartoonMapper.findByConditionPeople(str,start,size);
     }
 }
