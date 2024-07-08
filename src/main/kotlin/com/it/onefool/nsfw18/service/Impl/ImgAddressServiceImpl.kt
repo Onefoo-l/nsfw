@@ -1,7 +1,10 @@
 package com.it.onefool.nsfw18.service.Impl
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
+import com.it.onefool.nsfw18.common.StatusCode
 import com.it.onefool.nsfw18.domain.entry.ImgAddress
+import com.it.onefool.nsfw18.exception.CustomizeException
 import com.it.onefool.nsfw18.mapper.ImgAddressMapper
 import com.it.onefool.nsfw18.service.ImgAddressService
 import org.slf4j.LoggerFactory
@@ -17,5 +20,19 @@ class ImgAddressServiceImpl
     : ServiceImpl<ImgAddressMapper?, ImgAddress?>(), ImgAddressService {
     companion object {
         private val logger = LoggerFactory.getLogger(ImgAddressServiceImpl::class.java)
+    }
+
+    /**
+     * 根据图片id查询图片地址
+     */
+    override fun findByImgId(list: List<Int>) : List<ImgAddress>{
+        val qwImg = QueryWrapper<ImgAddress>()
+        qwImg.`in`("id", list)
+        val imgAddress = this.list(qwImg)
+        if (imgAddress.isNullOrEmpty()) throw CustomizeException(
+            StatusCode.NOT_FOUND.code(),
+            StatusCode.NOT_FOUND.message()
+        )
+        return imgAddress.filterNotNull()
     }
 }

@@ -2,6 +2,7 @@ package com.it.onefool.nsfw18.service
 import com.baomidou.mybatisplus.extension.service.IService
 import com.it.onefool.nsfw18.common.Result
 import com.it.onefool.nsfw18.domain.entry.Chapter
+import com.it.onefool.nsfw18.domain.vo.ChapterImgVo
 
 /**
  * @author 97436
@@ -13,4 +14,9 @@ interface ChapterService : IService<Chapter?>{
      * 根据漫画id查询章节信息
      */
     fun findByCartoonId(id: Int) : Result<List<Chapter?>>
+
+    /**
+     * 根据漫画id和章节id查询章节信息
+     */
+    fun findByChapter(cartoonId: Int, chapterId: Int): Result<ChapterImgVo>
 }
