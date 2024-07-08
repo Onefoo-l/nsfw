@@ -6,6 +6,8 @@ import com.it.onefool.nsfw18.exception.CustomizeException
 import com.it.onefool.nsfw18.mapper.LabelMapper
 import com.it.onefool.nsfw18.service.CartoonLabelService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,13 +16,14 @@ import org.springframework.transaction.annotation.Transactional
  * @Date 2024/7/9 0:32
  */
 @Component
-class TagType: ILabelService {
+class TagType: ILabelService{
 
     @Autowired
     private lateinit var labelMapper: LabelMapper
 
     @Autowired
     private lateinit var cartoonLabelService: CartoonLabelService
+
 
     /**
      * @param id 漫画ID
@@ -37,4 +40,5 @@ class TagType: ILabelService {
         )
         cartoonLabelService.addCartoonIdAndLabelId(id,label.id)
     }
+
 }

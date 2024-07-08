@@ -2,6 +2,8 @@ package com.it.onefool.nsfw18.strategy.label
 
 import com.it.onefool.nsfw18.common.StatusCode
 import com.it.onefool.nsfw18.exception.CustomizeException
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Component
 
 /**
@@ -11,19 +13,19 @@ import org.springframework.stereotype.Component
 @Component
 class LabelConditionType {
 
-    companion object {
-        private val LABEL_TYPE_MAP: Map<Int, ILabelService> = mapOf(
-            0 to WorkType(),
-            1 to TagType(),
-            2 to PeopleType(),
-            3 to AuthorType()
-        )
-    }
+    @Autowired
+    private lateinit var applicationContext: ApplicationContext
 
     fun getLabelService(type: Int): ILabelService {
-        return LABEL_TYPE_MAP[type] ?: throw CustomizeException(
-            StatusCode.LABEL_PARAM_ERROR.code(),
-            StatusCode.LABEL_PARAM_ERROR.message()
-        )
+        return when (type) {
+            0 -> applicationContext.getBean(WorkType::class.java)
+            1 -> applicationContext.getBean(TagType::class.java)
+            2 -> applicationContext.getBean(PeopleType::class.java)
+            3 -> applicationContext.getBean(AuthorType::class.java)
+            else -> throw CustomizeException(
+                StatusCode.LABEL_PARAM_ERROR.code(),
+                StatusCode.LABEL_PARAM_ERROR.message()
+            )
+        }
     }
 }
