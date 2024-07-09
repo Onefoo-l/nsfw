@@ -11,7 +11,5 @@ interface ImgAddressService : IService<ImgAddress?> {
     /**
      * 根据图片id查询图片地址
      */
-    fun findByImgId(list: List<Int>) : List<ImgAddress>
-
-
+     fun findByImgId(list: List<Int>): List<ImgAddress>
 }

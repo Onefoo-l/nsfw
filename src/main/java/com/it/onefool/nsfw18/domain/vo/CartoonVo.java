@@ -72,13 +72,10 @@ public class CartoonVo {
      */
     private List<CommentDto> commentDtoList;
 
-    public List<CommentDto> getCommentDtoList() {
-        return commentDtoList;
-    }
-
-    public void setCommentDtoList(List<CommentDto> commentDtoList) {
-        this.commentDtoList = commentDtoList;
-    }
+    /**
+     * 总图片数量
+     */
+    private Integer imgCount;
 
     /**
      * 上架时间
@@ -89,6 +86,22 @@ public class CartoonVo {
      * 更新时间
      */
     private LocalDateTime updateTime;
+
+    public Integer getImgCount() {
+        return imgCount;
+    }
+
+    public void setImgCount(Integer imgCount) {
+        this.imgCount = imgCount;
+    }
+
+    public List<CommentDto> getCommentDtoList() {
+        return commentDtoList;
+    }
+
+    public void setCommentDtoList(List<CommentDto> commentDtoList) {
+        this.commentDtoList = commentDtoList;
+    }
 
     public List<ChapterDto> getChapterDto() {
         return chapterDto;
@@ -209,6 +222,7 @@ public class CartoonVo {
                 ", tag=" + tag +
                 ", author=" + author +
                 ", commentDtoList=" + commentDtoList +
+                ", totalPage=" + totalPage +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';

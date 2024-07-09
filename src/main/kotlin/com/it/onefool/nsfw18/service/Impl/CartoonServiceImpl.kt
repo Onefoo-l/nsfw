@@ -55,7 +55,7 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper, Cartoon>(), CartoonService
     private lateinit var commentService: CommentService
 
     @Autowired
-    private lateinit var commentReplyService: CommentReplyService
+    private lateinit var chapterImgAddressService: ChapterImgAddressService
 
     @Autowired
     private lateinit var cartoonMapper: CartoonMapper
@@ -77,8 +77,11 @@ class CartoonServiceImpl : ServiceImpl<CartoonMapper, Cartoon>(), CartoonService
                 beanUtils.copyCartoonAndCartoonVo(it, cartoonVo)
             } ?: run { throw CustomizeException(StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message()) }
             // 漫画章节查询
-            chapterService.findByCartoonId(i).data?.let {
-                beanUtils.copyChapterAndCartoonVo(it, cartoonVo)
+            chapterService.findByCartoonId(i).data?.let {c ->
+                val chapterIds = c.map { it?.id }
+                val imgCount = chapterImgAddressService.findImgCount(chapterIds)
+                cartoonVo.imgCount = imgCount
+                beanUtils.copyChapterAndCartoonVo(c, cartoonVo)
             }
             //漫画标签查询
             cartoonLabelService.findByCartoonId(i).data?.let { c ->

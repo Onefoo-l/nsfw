@@ -33,7 +33,7 @@ class ChapterImgAddressServiceImpl : ServiceImpl<ChapterImgAddressMapper?, Chapt
     /**
      * 根据章节id查询图片id
      */
-    override fun findByChapterId(id: Int): Result<ChapterImgVo>{
+    override fun findByChapterId(id: Int): Result<ChapterImgVo> {
         val chapterImgVo = ChapterImgVo()
         val qwChapterImg = QueryWrapper<ChapterImgAddress>()
         qwChapterImg.eq("chapter_id", id)
@@ -51,5 +51,18 @@ class ChapterImgAddressServiceImpl : ServiceImpl<ChapterImgAddressMapper?, Chapt
             chapterImgVo.imgDtoS.add(imgDto)
         }
         return Result.ok(chapterImgVo)
+    }
+
+    /**
+     * 查询出当前漫画的所有图片数量
+     */
+    override fun findImgCount(chapterIds: List<Int?>): Int {
+        if (chapterIds.isEmpty()) throw CustomizeException(
+            StatusCode.NOT_FOUND.code(),
+            StatusCode.NOT_FOUND.message()
+        )
+        val qwChapterIds = QueryWrapper<ChapterImgAddress>()
+        qwChapterIds.`in`("chapter_id", chapterIds)
+        return this.count(qwChapterIds).toInt()
     }
 }

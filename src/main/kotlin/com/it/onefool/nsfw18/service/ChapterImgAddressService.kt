@@ -15,5 +15,8 @@ interface ChapterImgAddressService : IService<ChapterImgAddress?> {
      */
     fun findByChapterId(id: Int) : Result<ChapterImgVo>
 
-
+    /**
+     * 查询出当前漫画的所有图片数量
+     */
+    fun findImgCount(chapterIds: List<Int?>): Int
 }
