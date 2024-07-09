@@ -4,17 +4,18 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
- * 
  * @TableName comment_reply
  */
-@TableName(value ="comment_reply")
+@TableName(value = "comment_reply")
 public class CommentReply implements Serializable {
     /**
-     * 
+     *
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
@@ -36,6 +37,18 @@ public class CommentReply implements Serializable {
      */
     @TableField(value = "head_image")
     private String headImage;
+
+    /**
+     * 漫画id
+     */
+    @TableField(value = "cartoon_id")
+    private Integer cartoonId;
+
+    /**
+     * 章节id
+     */
+    @TableField(value = "chapter_id")
+    private Integer chapterId;
 
     /**
      * 针对的是哪条 评论id 进行回复
@@ -67,15 +80,31 @@ public class CommentReply implements Serializable {
     @TableField(value = "updated_time")
     private LocalDateTime updatedTime;
 
+    public Integer getCartoonId() {
+        return cartoonId;
+    }
+
+    public void setCartoonId(Integer cartoonId) {
+        this.cartoonId = cartoonId;
+    }
+
+    public Integer getChapterId() {
+        return chapterId;
+    }
+
+    public void setChapterId(Integer chapterId) {
+        this.chapterId = chapterId;
+    }
+
     /**
-     * 
+     *
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
+     *
      */
     public void setId(Integer id) {
         this.id = id;
@@ -194,60 +223,55 @@ public class CommentReply implements Serializable {
     }
 
     @Override
-    public boolean equals(Object that) {
-        if (this == that) {
-            return true;
-        }
-        if (that == null) {
-            return false;
-        }
-        if (getClass() != that.getClass()) {
-            return false;
-        }
-        CommentReply other = (CommentReply) that;
-        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getUserId() == null ? other.getUserId() == null : this.getUserId().equals(other.getUserId()))
-            && (this.getNickName() == null ? other.getNickName() == null : this.getNickName().equals(other.getNickName()))
-            && (this.getHeadImage() == null ? other.getHeadImage() == null : this.getHeadImage().equals(other.getHeadImage()))
-            && (this.getCommentId() == null ? other.getCommentId() == null : this.getCommentId().equals(other.getCommentId()))
-            && (this.getContent() == null ? other.getContent() == null : this.getContent().equals(other.getContent()))
-            && (this.getLikes() == null ? other.getLikes() == null : this.getLikes().equals(other.getLikes()))
-            && (this.getCreatedTime() == null ? other.getCreatedTime() == null : this.getCreatedTime().equals(other.getCreatedTime()))
-            && (this.getUpdatedTime() == null ? other.getUpdatedTime() == null : this.getUpdatedTime().equals(other.getUpdatedTime()));
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CommentReply that = (CommentReply) o;
+
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(userId, that.userId)) return false;
+        if (!Objects.equals(nickName, that.nickName)) return false;
+        if (!Objects.equals(headImage, that.headImage)) return false;
+        if (!Objects.equals(cartoonId, that.cartoonId)) return false;
+        if (!Objects.equals(chapterId, that.chapterId)) return false;
+        if (!Objects.equals(commentId, that.commentId)) return false;
+        if (!Objects.equals(content, that.content)) return false;
+        if (!Objects.equals(likes, that.likes)) return false;
+        if (!Objects.equals(createdTime, that.createdTime)) return false;
+        return Objects.equals(updatedTime, that.updatedTime);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getUserId() == null) ? 0 : getUserId().hashCode());
-        result = prime * result + ((getNickName() == null) ? 0 : getNickName().hashCode());
-        result = prime * result + ((getHeadImage() == null) ? 0 : getHeadImage().hashCode());
-        result = prime * result + ((getCommentId() == null) ? 0 : getCommentId().hashCode());
-        result = prime * result + ((getContent() == null) ? 0 : getContent().hashCode());
-        result = prime * result + ((getLikes() == null) ? 0 : getLikes().hashCode());
-        result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
-        result = prime * result + ((getUpdatedTime() == null) ? 0 : getUpdatedTime().hashCode());
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
+        result = 31 * result + (nickName != null ? nickName.hashCode() : 0);
+        result = 31 * result + (headImage != null ? headImage.hashCode() : 0);
+        result = 31 * result + (cartoonId != null ? cartoonId.hashCode() : 0);
+        result = 31 * result + (chapterId != null ? chapterId.hashCode() : 0);
+        result = 31 * result + (commentId != null ? commentId.hashCode() : 0);
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        result = 31 * result + (likes != null ? likes.hashCode() : 0);
+        result = 31 * result + (createdTime != null ? createdTime.hashCode() : 0);
+        result = 31 * result + (updatedTime != null ? updatedTime.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", userId=").append(userId);
-        sb.append(", nickName=").append(nickName);
-        sb.append(", headImage=").append(headImage);
-        sb.append(", commentId=").append(commentId);
-        sb.append(", content=").append(content);
-        sb.append(", likes=").append(likes);
-        sb.append(", createdTime=").append(createdTime);
-        sb.append(", updatedTime=").append(updatedTime);
-        sb.append("]");
-        return sb.toString();
+        return "CommentReply{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", nickName='" + nickName + '\'' +
+                ", headImage='" + headImage + '\'' +
+                ", cartoonId=" + cartoonId +
+                ", chapterId=" + chapterId +
+                ", commentId=" + commentId +
+                ", content='" + content + '\'' +
+                ", likes=" + likes +
+                ", createdTime=" + createdTime +
+                ", updatedTime=" + updatedTime +
+                '}';
     }
 }
