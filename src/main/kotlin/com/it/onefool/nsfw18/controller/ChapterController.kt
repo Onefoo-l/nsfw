@@ -1,5 +1,6 @@
 package com.it.onefool.nsfw18.controller
 
+import com.it.onefool.nsfw18.aop.Log
 import com.it.onefool.nsfw18.common.Result
 import com.it.onefool.nsfw18.common.StatusCode
 import com.it.onefool.nsfw18.domain.vo.ChapterImgVo
@@ -33,6 +34,7 @@ class ChapterController {
      * 根据漫画id和章节id查询章节信息
      */
     @PostMapping("/findChapter")
+    @Log("查询章节信息")
     fun findById(@RequestParam(name = "cartoonId", required = true) cartoonId : Int,
                  @RequestParam(name = "chapterId", required = true) chapterId: Int
     ): Result<ChapterImgVo> {
