@@ -1,9 +1,7 @@
 package com.it.onefool.nsfw18.aop
 
-import com.alibaba.fastjson2.JSONObject
 import com.it.onefool.nsfw18.domain.entry.OperationLog
-import com.it.onefool.nsfw18.filter.ip.FilterFactory
-import com.it.onefool.nsfw18.queue.LogQueue
+import com.it.onefool.nsfw18.filter.ip.RealIPDetection
 import com.it.onefool.nsfw18.utils.JwtUtil
 import kotlinx.coroutines.*
 import org.aspectj.lang.JoinPoint
@@ -16,12 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 import java.time.LocalDateTime
-import javax.servlet.http.HttpServletRequest
 
 /**
  * @Author linjiawei
@@ -38,7 +31,7 @@ class LogAopOperation {
     private lateinit var jwtUtil: JwtUtil
 
     @Autowired
-    private lateinit var filterFactory: FilterFactory
+    private lateinit var realIPDetection: RealIPDetection
 
     @Pointcut("@annotation(com.it.onefool.nsfw18.aop.Log)")
     fun LogOperation() {
@@ -69,7 +62,7 @@ class LogAopOperation {
             operation.userIp = ipAddress
             operation.createTime = LocalDateTime.now()
             operation.updateTime = LocalDateTime.now()
-            filterFactory.builder(operation)
+            realIPDetection.builder(operation)
         }
     }
 }
