@@ -6,14 +6,10 @@ import com.it.onefool.nsfw18.common.StatusCode
 import com.it.onefool.nsfw18.domain.vo.ChapterImgVo
 import com.it.onefool.nsfw18.exception.CustomizeException
 import com.it.onefool.nsfw18.service.ChapterService
+import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 /**
  * @Author linjiawei
@@ -35,9 +31,11 @@ class ChapterController {
      */
     @PostMapping("/findChapter")
     @Log("查询章节信息")
-    fun findById(@RequestParam(name = "cartoonId", required = true) cartoonId : Int,
-                 @RequestParam(name = "chapterId", required = true) chapterId: Int
+    fun findById(
+        @RequestParam(name = "cartoonId", required = true) cartoonId: Int,
+        @RequestParam(name = "chapterId", required = true) chapterId: Int,
+        request: HttpServletRequest
     ): Result<ChapterImgVo> {
-        return chapterService.findByChapter(cartoonId,chapterId)
+        return chapterService.findByChapter(cartoonId, chapterId, request)
     }
 }

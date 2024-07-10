@@ -44,6 +44,11 @@ class ResponseConstants {
          * 需要登录
          */
         val NEED_LOGIN = "需要登录"
+
+        /**
+         * 事务插入失败
+         */
+        val TRANSACTION_INSERTION_FAILED = "事务插入失败"
         /**
          * 用户名或者密码错误
          */

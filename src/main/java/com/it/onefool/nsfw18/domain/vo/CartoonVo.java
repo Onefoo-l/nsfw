@@ -222,7 +222,7 @@ public class CartoonVo {
                 ", tag=" + tag +
                 ", author=" + author +
                 ", commentDtoList=" + commentDtoList +
-                ", totalPage=" + totalPage +
+                ", imgCount=" + imgCount +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';

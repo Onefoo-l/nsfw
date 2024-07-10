@@ -21,7 +21,8 @@ public enum StatusCode {
     FAILURE(50000, ResponseConstants.Companion.getFAILURE()),
     CUSTOM_FAILURE(50001, ResponseConstants.Companion.getCUSTOM_FAILURE()),
     NEED_LOGIN(50002, ResponseConstants.Companion.getNEED_LOGIN()),
-    ADD_LABEL_ERROR(50003, ResponseConstants.Companion.getADD_LABEL_ERROR());
+    ADD_LABEL_ERROR(50003, ResponseConstants.Companion.getADD_LABEL_ERROR()),
+    TRANSACTION_INSERTION_FAILED(50004, ResponseConstants.Companion.getTRANSACTION_INSERTION_FAILED());
     private final Integer code;
 
     private final String message;

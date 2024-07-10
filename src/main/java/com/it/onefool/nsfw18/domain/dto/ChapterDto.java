@@ -15,6 +15,19 @@ public class ChapterDto {
      */
     private String chapterName;
 
+    /**
+     * 是否曾经浏览过
+     */
+    private boolean isRead;
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
+    }
+
     public Integer getChapterId() {
         return chapterId;
     }
