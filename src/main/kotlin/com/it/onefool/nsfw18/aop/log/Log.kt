@@ -1,4 +1,4 @@
-package com.it.onefool.nsfw18.aop
+package com.it.onefool.nsfw18.aop.log
 
 /**
  * @Author linjiawei

@@ -1,4 +1,4 @@
-package com.it.onefool.nsfw18.filter.ip
+package com.it.onefool.nsfw18.aop.log
 
 import com.it.onefool.nsfw18.domain.entry.OperationLog
 import com.it.onefool.nsfw18.queue.LogQueue

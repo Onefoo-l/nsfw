@@ -1,10 +1,8 @@
 package com.it.onefool.nsfw18.controller
 
-import com.it.onefool.nsfw18.aop.Log
+import com.it.onefool.nsfw18.aop.log.Log
 import com.it.onefool.nsfw18.common.Result
-import com.it.onefool.nsfw18.common.StatusCode
 import com.it.onefool.nsfw18.domain.vo.ChapterImgVo
-import com.it.onefool.nsfw18.exception.CustomizeException
 import com.it.onefool.nsfw18.service.ChapterService
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory

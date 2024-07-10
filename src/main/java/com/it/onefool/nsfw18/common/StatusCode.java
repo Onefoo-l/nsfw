@@ -16,6 +16,7 @@ public enum StatusCode {
     FORBIDDEN(40002, ResponseConstants.Companion.getFORBIDDEN()),
     LICENSE_EXPIRED(40003, ResponseConstants.Companion.getLICENSE_EXPIRED()),
     NOT_FOUND(40004, ResponseConstants.Companion.getNOT_FOUND()),
+    REQUEST_FORBIDDEN(40005, ResponseConstants.Companion.getREQUEST_FORBIDDEN()),
     NOT_FOUND_COMMENT(40010, ResponseConstants.Companion.getNOT_FOUND_COMMENT()),
     LABEL_PARAM_ERROR(40011, ResponseConstants.Companion.getLABEL_PARAM_ERROR()),
     FAILURE(50000, ResponseConstants.Companion.getFAILURE()),

@@ -23,7 +23,7 @@ class ResponseConstants {
         /**
          * 禁止访问
          */
-        val FORBIDDEN = "禁止访问"
+        val REQUEST_FORBIDDEN = "禁止访问"
         /**
          * 授权过期
          */
@@ -36,6 +36,11 @@ class ResponseConstants {
          * 系统异常
          */
         val FAILURE = "系统异常"
+
+        /**
+         * 拒绝请求
+         */
+         val FORBIDDEN = "拒绝请求"
         /**
          * 自定义异常错误
          */

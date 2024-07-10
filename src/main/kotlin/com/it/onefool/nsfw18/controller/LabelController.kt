@@ -1,6 +1,6 @@
 package com.it.onefool.nsfw18.controller
 
-import com.it.onefool.nsfw18.aop.Log
+import com.it.onefool.nsfw18.aop.log.Log
 import com.it.onefool.nsfw18.common.StatusCode
 import com.it.onefool.nsfw18.domain.dto.LabelDto
 import com.it.onefool.nsfw18.exception.CustomizeException

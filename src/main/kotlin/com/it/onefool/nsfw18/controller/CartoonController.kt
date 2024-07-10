@@ -1,6 +1,6 @@
 package com.it.onefool.nsfw18.controller
 
-import com.it.onefool.nsfw18.aop.Log
+import com.it.onefool.nsfw18.aop.log.Log
 import com.it.onefool.nsfw18.common.PageInfo
 import com.it.onefool.nsfw18.common.PageRequestDto
 import com.it.onefool.nsfw18.common.Result

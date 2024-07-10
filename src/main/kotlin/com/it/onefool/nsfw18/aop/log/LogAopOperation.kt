@@ -1,9 +1,7 @@
-package com.it.onefool.nsfw18.aop
+package com.it.onefool.nsfw18.aop.log
 
 import com.it.onefool.nsfw18.domain.entry.OperationLog
-import com.it.onefool.nsfw18.filter.ip.RealIPDetection
 import com.it.onefool.nsfw18.utils.JwtUtil
-import kotlinx.coroutines.*
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Aspect
@@ -33,7 +31,7 @@ class LogAopOperation {
     @Autowired
     private lateinit var realIPDetection: RealIPDetection
 
-    @Pointcut("@annotation(com.it.onefool.nsfw18.aop.Log)")
+    @Pointcut("@annotation(com.it.onefool.nsfw18.aop.log.Log)")
     fun LogOperation() {
     }
 
