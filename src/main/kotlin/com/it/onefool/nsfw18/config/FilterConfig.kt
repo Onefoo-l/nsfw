@@ -1,4 +1,4 @@
-package com.it.onefool.nsfw18.filter
+package com.it.onefool.nsfw18.config
 
 import com.it.onefool.nsfw18.filter.*
 import jakarta.servlet.Filter

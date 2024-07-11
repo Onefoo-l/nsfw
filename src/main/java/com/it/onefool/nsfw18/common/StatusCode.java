@@ -17,12 +17,14 @@ public enum StatusCode {
     LICENSE_EXPIRED(40003, ResponseConstants.Companion.getLICENSE_EXPIRED()),
     NOT_FOUND(40004, ResponseConstants.Companion.getNOT_FOUND()),
     REQUEST_FORBIDDEN(40005, ResponseConstants.Companion.getREQUEST_FORBIDDEN()),
+    USERNAME_OR_PASSWORD_ERROR(40006, ResponseConstants.Companion.getUSERNAME_OR_PASSWORD_ERROR()),
     NOT_FOUND_COMMENT(40010, ResponseConstants.Companion.getNOT_FOUND_COMMENT()),
     LABEL_PARAM_ERROR(40011, ResponseConstants.Companion.getLABEL_PARAM_ERROR()),
     FAILURE(50000, ResponseConstants.Companion.getFAILURE()),
     CUSTOM_FAILURE(50001, ResponseConstants.Companion.getCUSTOM_FAILURE()),
     NEED_LOGIN(50002, ResponseConstants.Companion.getNEED_LOGIN()),
     ADD_LABEL_ERROR(50003, ResponseConstants.Companion.getADD_LABEL_ERROR()),
+    USERNAME_IS_EXIST(50004,ResponseConstants.Companion.getUSERNAME_IS_EXIST()),
     TRANSACTION_INSERTION_FAILED(50004, ResponseConstants.Companion.getTRANSACTION_INSERTION_FAILED());
     private final Integer code;
 

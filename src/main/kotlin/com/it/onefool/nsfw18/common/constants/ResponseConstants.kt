@@ -58,6 +58,11 @@ class ResponseConstants {
          * 用户名或者密码错误
          */
         val USERNAME_OR_PASSWORD_ERROR = "用户名或者密码错误"
+
+        /**
+         * 用户名已存在
+         */
+        val USERNAME_IS_EXIST = "用户名已存在"
         /**
          * 你的网络有问题
          */

@@ -10,8 +10,6 @@ public class LoginDto {
     private String username;
     //密码
     private String password;
-    //验证码
-    private String code;
 
     public String getUsername() {
         return username;
@@ -29,20 +27,11 @@ public class LoginDto {
         this.password = password;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     @Override
     public String toString() {
-        return "LoginUser{" +
+        return "LoginDto{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", code='" + code + '\'' +
                 '}';
     }
 }

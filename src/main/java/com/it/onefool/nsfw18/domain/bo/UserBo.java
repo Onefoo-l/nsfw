@@ -1,20 +1,13 @@
-package com.it.onefool.nsfw18.domain.entry;
-
-import com.baomidou.mybatisplus.annotation.*;
-
-import java.time.LocalDateTime;
+package com.it.onefool.nsfw18.domain.bo;
 
 /**
  * @Author linjiawei
- * @Date 2024/6/24 21:14
- * 用户信息
+ * @Date 2024/7/12 3:19
  */
-@TableName("user")
-public class User {
+public class UserBo {
     /**
-     * 用户ID
+     * 用户id
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -26,6 +19,11 @@ public class User {
      * 用户昵称
      */
     private String nickname;
+
+    /**
+     * 密码
+     */
+    private String password;
 
     /**
      * 用户邮箱
@@ -46,39 +44,6 @@ public class User {
      * 头像地址
      */
     private String avatar;
-
-    /**
-     * 密码
-     */
-    private String password;
-
-    /**
-     * 帐号状态（0正常 1停用）
-     */
-    private Integer status;
-
-    /**
-     * 创建时间
-     */
-    @TableField(fill = FieldFill.INSERT, value = "create_time")
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @TableField(fill = FieldFill.INSERT_UPDATE, value = "update_time")
-    private LocalDateTime updateTime;
-
-    /**
-     * 备注
-     */
-    private String remark;
-
-    /**
-     * 逻辑删除 0:未删除 1:已删除
-     */
-    @TableLogic
-    private Integer deleted;
 
     public Long getId() {
         return id;
@@ -144,49 +109,9 @@ public class User {
         this.password = password;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public Integer getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
-
     @Override
     public String toString() {
-        return "User{" +
+        return "UserBo{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", nickname='" + nickname + '\'' +
@@ -195,11 +120,6 @@ public class User {
                 ", sex=" + sex +
                 ", avatar='" + avatar + '\'' +
                 ", password='" + password + '\'' +
-                ", status=" + status +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", remark='" + remark + '\'' +
-                ", deleted=" + deleted +
                 '}';
     }
 }
