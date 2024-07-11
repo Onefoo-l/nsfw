@@ -9,25 +9,25 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class FilterConfig {
-    @Autowired
-    private lateinit var authenticationFilter: AuthenticationFilter
-
-    @Autowired
-    private lateinit var ipBlacklistFilter: IpBlacklistFilter
+//    @Autowired
+//    private lateinit var authenticationFilter: AuthenticationFilter
+//
+//    @Autowired
+//    private lateinit var ipBlacklistFilter: IpBlacklistFilter
 
     @Bean
     fun filterChainManager(): FilterChainManager {
         val filterChainManager = FilterChainManager()
-        filterChainManager.addFilter(ipBlacklistFilter)
-        filterChainManager.addFilter(authenticationFilter)
+        filterChainManager.addFilter(IpBlacklistFilter())
+        filterChainManager.addFilter(AuthenticationFilter())
         return filterChainManager
     }
 
     @Bean
-    fun filterRegistrationBean(filterChainManager: FilterChainManager): FilterRegistrationBean<*> {
+    fun filterRegistrationBean(): FilterRegistrationBean<*> {
         val registrationBean = FilterRegistrationBean<FilterChainManager>()
         registrationBean.filter = filterChainManager()
-        registrationBean.addUrlPatterns("/*")
+        registrationBean.addUrlPatterns("/cartoon/findNew")
         return registrationBean
     }
 }

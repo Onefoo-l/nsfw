@@ -15,14 +15,14 @@ import org.springframework.stereotype.Component
  * @Date 2024/6/24 18:54
  * 校验的过滤器
  */
-@Component
+//@Component
 class AuthenticationFilter : AbstractCustomFilter() {
     companion object {
         private val log = LoggerFactory.getLogger(AuthenticationFilter::class.java)
     }
 
-    @Autowired
-    private lateinit var jwtUtil: JwtUtil
+//    @Autowired
+//    private lateinit var jwtUtil: JwtUtil
 
     //进行校验
     override fun doFilter(
@@ -50,7 +50,7 @@ class AuthenticationFilter : AbstractCustomFilter() {
     private fun checkLogin(request: HttpServletRequest): Boolean {
         val path = request.requestURI
         //以后还有很多逻辑校验
-        jwtUtil.getToken(request) ?: run {
+        JwtUtil().getToken(request) ?: run {
             if (path.contains("/comment") ||
                 path.contains("/commentReply")
             ) {

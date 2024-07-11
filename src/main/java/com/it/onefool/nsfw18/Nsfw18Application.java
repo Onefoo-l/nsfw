@@ -13,7 +13,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-//@ServletComponentScan 过滤器
 @MapperScan("com.it.onefool.nsfw18.mapper")
 @EnableAspectJAutoProxy // 开启AOP
 @EnableScheduling // 开启定时任务

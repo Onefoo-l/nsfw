@@ -22,16 +22,16 @@ class RealIPDetection : InitializingBean {
     override fun afterPropertiesSet() {
         //初始化ip库
         IPInfoUtils.init()
-        log.info("添加真实ip过滤器并开启========>")
+        log.info("添加真实ip========>")
     }
     fun builder(operation: OperationLog){
         doFilterVal(operation)
     }
-    fun addOperation(operation: OperationLog) {
+    private fun addOperation(operation: OperationLog) {
         LogQueue.addLog(operation)
     }
 
-    fun doFilterVal(k: OperationLog) {
+    private fun doFilterVal(k: OperationLog) {
         val str = StringBuilder()
         IPInfoUtils.getIpInfo(k.userIp)?.let { i ->
             i.country?.let {

@@ -28,7 +28,8 @@ class FilterChainManager : Filter {
                         // 调用自身来处理下一个过滤器
                         doFilter(request, response)
                     }
-                } else {
+                }
+                else {
                     // 所有过滤器都处理完毕，调用原始的FilterChain来处理请求(过滤器走完了)
                     originalChain.doFilter(request, response)
                 }
@@ -47,7 +48,8 @@ class FilterChainManager : Filter {
         response: ServletResponse?,
         chain: FilterChain?
     ) {
-        InternalFilterChain(filters, chain!!).doFilter(request, response)
+        InternalFilterChain(filters, chain!!)
+            .doFilter(request, response)
     }
 
     override fun destroy() {

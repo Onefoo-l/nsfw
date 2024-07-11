@@ -19,7 +19,7 @@ import kotlin.math.log
  * ip黑名单过滤器
  * 有条件可以购买防火墙，直接在网络层上拦截，在过滤器中进行过滤也是会对服务器造成压力
  */
-@Component
+//@Component
 class IpBlacklistFilter : AbstractCustomFilter() {
     companion object{
         private val log = LoggerFactory.getLogger(IpBlacklistFilter::class.java)
