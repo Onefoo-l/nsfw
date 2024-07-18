@@ -1,7 +1,7 @@
 package com.it.onefool.nsfw18.mapper
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper
-import com.it.onefool.nsfw18.domain.bo.CartoonBo
+import com.it.onefool.nsfw18.domain.po.CartoonPo
 import com.it.onefool.nsfw18.domain.entry.Cartoon
 import org.apache.ibatis.annotations.Param
 
@@ -60,7 +60,7 @@ interface CartoonMapper : BaseMapper<Cartoon?> {
     /**
      * 根据漫画id查询漫画信息
      */
-    fun findById(ids: List<Int?>): List<CartoonBo?>
+    fun findById(ids: List<Int?>): List<CartoonPo?>
 
     /**
      * 根据条件查询漫画总数

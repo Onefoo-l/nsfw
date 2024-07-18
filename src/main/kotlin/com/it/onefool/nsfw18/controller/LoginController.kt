@@ -1,5 +1,6 @@
 package com.it.onefool.nsfw18.controller
 
+import com.it.onefool.nsfw18.aop.log.Log
 import com.it.onefool.nsfw18.common.Result
 import com.it.onefool.nsfw18.common.StatusCode
 import com.it.onefool.nsfw18.domain.dto.LoginDto
@@ -35,6 +36,7 @@ class LoginController{
     /**
      * 注册
      */
+    @Log("注册")
     @PostMapping("/register")
     fun register(@RequestBody registerDto: RegisterDto?): Result<String>{
         registerDto?.let {
@@ -48,6 +50,7 @@ class LoginController{
     /**
      * 登录
      */
+    @Log("登录")
     @PostMapping()
     fun login(@RequestBody loginDto: LoginDto?): Result<LoginUserVo>{
         loginDto?.let {

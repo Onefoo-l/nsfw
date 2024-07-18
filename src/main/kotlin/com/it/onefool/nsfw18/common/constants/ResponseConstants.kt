@@ -79,5 +79,9 @@ class ResponseConstants {
          * 标签类型或标签参数异常
          */
         val ADD_LABEL_ERROR = "添加标签失败"
+        /**
+         * 评论不能为空
+         */
+        val COMMENTS_CANNOT_BE_EMPTY = "评论不能为空"
     }
 }

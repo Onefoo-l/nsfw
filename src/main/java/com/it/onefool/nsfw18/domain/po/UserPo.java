@@ -1,10 +1,10 @@
-package com.it.onefool.nsfw18.domain.bo;
+package com.it.onefool.nsfw18.domain.po;
 
 /**
  * @Author linjiawei
  * @Date 2024/7/12 3:19
  */
-public class UserBo {
+public class UserPo {
     /**
      * 用户id
      */

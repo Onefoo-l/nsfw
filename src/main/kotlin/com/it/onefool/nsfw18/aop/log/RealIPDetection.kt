@@ -46,7 +46,7 @@ class RealIPDetection : InitializingBean {
         } ?: run {
             k.userCity = "未知"
             k.success = 1
+            addOperation(k)
         }
-
     }
 }

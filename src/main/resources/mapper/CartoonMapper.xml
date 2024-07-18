@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.it.onefool.nsfw18.mapper.CartoonMapper">
 
-    <resultMap id="cartoonResultMap" type="com.it.onefool.nsfw18.domain.bo.CartoonBo">
+    <resultMap id="cartoonResultMap" type="com.it.onefool.nsfw18.domain.po.CartoonPo">
         <id property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="avatar" column="avatar"/>

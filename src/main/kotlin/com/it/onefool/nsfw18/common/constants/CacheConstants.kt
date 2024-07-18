@@ -8,6 +8,8 @@ class CacheConstants {
     companion object {
         //认证后的用户key前缀
         val LOGIN_USER_KEY = "login_key:"
+        //存入redis的评论Key
+        val COMMENTS = "comments"
     }
 
 }

@@ -119,7 +119,6 @@ class LoginServiceImpl : LoginService {
                 if (!checkPassword(password, u.password)) nameOrPwdError()
                 loginUserVo = responseLoginUserVo(u)
             }
-            nameOrPwdError()
         } ?: run {
             nameOrPwdError()
         }

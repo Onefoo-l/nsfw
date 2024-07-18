@@ -7,14 +7,8 @@ import com.it.onefool.nsfw18.common.PageInfo
 import com.it.onefool.nsfw18.common.PageRequestDto
 import com.it.onefool.nsfw18.common.Result
 import com.it.onefool.nsfw18.common.StatusCode
-import com.it.onefool.nsfw18.domain.bo.CartoonBo
-import com.it.onefool.nsfw18.domain.dto.CommentDto
 import com.it.onefool.nsfw18.domain.entry.Cartoon
-import com.it.onefool.nsfw18.domain.entry.CartoonLabel
-import com.it.onefool.nsfw18.domain.entry.Chapter
 import com.it.onefool.nsfw18.domain.entry.Comment
-import com.it.onefool.nsfw18.domain.entry.CommentReply
-import com.it.onefool.nsfw18.domain.entry.Label
 import com.it.onefool.nsfw18.domain.pojo.FindCartoonConditionType
 import com.it.onefool.nsfw18.domain.vo.CartoonVo
 import com.it.onefool.nsfw18.exception.CustomizeException
@@ -25,8 +19,6 @@ import com.it.onefool.nsfw18.utils.BeanUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.lang.reflect.Field
-import kotlin.math.log
 
 /**
  * @author 97436

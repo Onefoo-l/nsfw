@@ -1,4 +1,4 @@
-package com.it.onefool.nsfw18.domain.bo;
+package com.it.onefool.nsfw18.domain.po;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.List;
  * @Author linjiawei
  * @Date 2024/7/2 23:41
  */
-public class CartoonBo {
+public class CartoonPo {
     /**
      * 漫画id
      */
