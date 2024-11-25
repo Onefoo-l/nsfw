@@ -20,13 +20,14 @@ public enum StatusCode {
     USERNAME_OR_PASSWORD_ERROR(40006, ResponseConstants.Companion.getUSERNAME_OR_PASSWORD_ERROR()),
     NOT_FOUND_COMMENT(40010, ResponseConstants.Companion.getNOT_FOUND_COMMENT()),
     LABEL_PARAM_ERROR(40011, ResponseConstants.Companion.getLABEL_PARAM_ERROR()),
-    COMMENTS_CANNOT_BE_EMPTY(40012,ResponseConstants.Companion.getCOMMENTS_CANNOT_BE_EMPTY()),
+    COMMENTS_CANNOT_BE_EMPTY(40012, ResponseConstants.Companion.getCOMMENTS_CANNOT_BE_EMPTY()),
     FAILURE(50000, ResponseConstants.Companion.getFAILURE()),
     CUSTOM_FAILURE(50001, ResponseConstants.Companion.getCUSTOM_FAILURE()),
     NEED_LOGIN(50002, ResponseConstants.Companion.getNEED_LOGIN()),
     ADD_LABEL_ERROR(50003, ResponseConstants.Companion.getADD_LABEL_ERROR()),
-    USERNAME_IS_EXIST(50004,ResponseConstants.Companion.getUSERNAME_IS_EXIST()),
-    TRANSACTION_INSERTION_FAILED(50004, ResponseConstants.Companion.getTRANSACTION_INSERTION_FAILED());
+    USERNAME_IS_EXIST(50004, ResponseConstants.Companion.getUSERNAME_IS_EXIST()),
+    TRANSACTION_INSERTION_FAILED(50004, ResponseConstants.Companion.getTRANSACTION_INSERTION_FAILED()),
+    DELETE_COMMENT_FAIL(50005, ResponseConstants.Companion.getDELETE_COMMENT_FAIL());
     private final Integer code;
 
     private final String message;

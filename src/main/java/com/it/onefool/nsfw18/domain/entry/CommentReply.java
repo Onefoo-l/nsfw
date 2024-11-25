@@ -15,7 +15,7 @@ import java.util.Objects;
 @TableName(value = "comment_reply")
 public class CommentReply implements Serializable {
     /**
-     *
+     * 回复评论的id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;

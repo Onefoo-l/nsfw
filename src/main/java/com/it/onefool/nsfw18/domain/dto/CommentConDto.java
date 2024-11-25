@@ -1,39 +1,29 @@
 package com.it.onefool.nsfw18.domain.dto;
 
+import java.time.LocalDateTime;
+
 /**
  * @Author linjiawei
- * @Date 2024/7/13 2:03
+ * @Date 2024/7/20 0:59
  */
-public class CommentReplyDto {
-
+public class CommentConDto {
     /**
      * 漫画id
      */
     private Integer cartoonId;
-
     /**
      * 章节id
      */
     private Integer chapterId;
+    /**
+     * 评论人写的内容
+     */
+    private String content;
 
     /**
-     * 针对的是哪条 评论id 进行回复
+     * 评论时间
      */
-    private Integer commentId;
-
-    /**
-     * 评论人的id
-     */
-    private Integer userId;
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
+    private LocalDateTime createTime;
     public Integer getCartoonId() {
         return cartoonId;
     }
@@ -50,11 +40,19 @@ public class CommentReplyDto {
         this.chapterId = chapterId;
     }
 
-    public Integer getCommentId() {
-        return commentId;
+    public String getContent() {
+        return content;
     }
 
-    public void setCommentId(Integer commentId) {
-        this.commentId = commentId;
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 }

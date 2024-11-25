@@ -15,7 +15,7 @@ import java.util.Objects;
 @TableName(value = "comment")
 public class Comment implements Serializable {
     /**
-     *
+     * 评论id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;

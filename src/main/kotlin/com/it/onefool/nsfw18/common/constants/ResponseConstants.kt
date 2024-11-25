@@ -83,5 +83,10 @@ class ResponseConstants {
          * 评论不能为空
          */
         val COMMENTS_CANNOT_BE_EMPTY = "评论不能为空"
+
+        /**
+         * 删除评论失败
+         */
+        val DELETE_COMMENT_FAIL = "删除评论失败"
     }
 }

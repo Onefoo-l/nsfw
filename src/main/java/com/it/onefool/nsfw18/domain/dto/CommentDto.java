@@ -7,12 +7,9 @@ import java.util.List;
  * @Author linjiawei
  * @Date 2024/6/28 20:01
  */
-public class CommentDto {
-    /**
-     * 评论ID
-     */
-    private Integer id;
+public class
 
+CommentDto {
     /**
      * 评论人的ID
      */
@@ -56,14 +53,6 @@ public class CommentDto {
 
     public void setChildrenCommentList(List<CommentDto> childrenCommentList) {
         this.childrenCommentList = childrenCommentList;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Integer getUserId() {
@@ -120,19 +109,5 @@ public class CommentDto {
 
     public void setUserTime(LocalDateTime userTime) {
         this.userTime = userTime;
-    }
-
-    @Override
-    public String toString() {
-        return "CommentDto{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", nickName='" + nickName + '\'' +
-                ", headImage='" + headImage + '\'' +
-                ", content='" + content + '\'' +
-                ", likes=" + likes +
-                ", replys=" + replys +
-                ", userTime=" + userTime +
-                '}';
     }
 }

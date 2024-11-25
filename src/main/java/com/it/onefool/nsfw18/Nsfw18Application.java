@@ -11,14 +11,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @MapperScan("com.it.onefool.nsfw18.mapper")
 @EnableAspectJAutoProxy // 开启AOP
 @EnableScheduling // 开启定时任务
+@EnableTransactionManagement//开启注解事务
 public class Nsfw18Application {
 
     private static final Logger log = LoggerFactory.getLogger(Nsfw18Application.class);
+
     public static void main(String[] args) {
         SpringApplication.run(Nsfw18Application.class, args);
         log.info("app启动===============>");

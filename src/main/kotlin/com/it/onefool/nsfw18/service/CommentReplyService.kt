@@ -7,6 +7,7 @@ import com.it.onefool.nsfw18.common.Result
 import com.it.onefool.nsfw18.domain.dto.CommentReplyContentDto
 import com.it.onefool.nsfw18.domain.dto.CommentReplyDto
 import com.it.onefool.nsfw18.domain.entry.CommentReply
+import com.it.onefool.nsfw18.domain.vo.CommentReplyVo
 import jakarta.servlet.http.HttpServletRequest
 
 /**
@@ -23,10 +24,13 @@ interface CommentReplyService : IService<CommentReply?> {
     fun findByCommentId(id: Int): Result<List<CommentReply?>?>
 
     /**
-     * 分页查询回复评论
+     * 分页查询回复评论（弃用，无需要分页查询，全部查询后返回给前端）
      */
-    fun pageCommentReply(pageRequestDto: PageRequestDto<CommentReplyDto?>)
-            : Result<PageInfo<CommentReply>>
+    fun pageCommentReply(
+        pageRequestDto: PageRequestDto<CommentReplyDto?>,
+        request: HttpServletRequest
+    )
+            : Result<PageInfo<CommentReplyVo>>
 
     /**
      * 插入回复评论
@@ -34,7 +38,26 @@ interface CommentReplyService : IService<CommentReply?> {
     fun addCommentReply(
         commentReply: CommentReplyContentDto,
         request: HttpServletRequest
-    ): Result<PageInfo<CommentReply>>
+    ): Result<PageInfo<CommentReplyVo>>
+
+    /**
+     * 删除回复评论
+     */
+    fun deleteCommentReply(id: Int)
 
 
+    /**
+     * 提供给外部调用的方法
+     */
+    fun getCommentsByPageMethod(
+        commentReply: CommentReplyDto
+    ): List<CommentReplyVo?>
+
+    /**
+     * 查询回复评论
+     */
+    fun findCommentReply(
+        page: CommentReplyDto,
+        request: HttpServletRequest
+    ): Result<List<CommentReplyVo>>
 }
