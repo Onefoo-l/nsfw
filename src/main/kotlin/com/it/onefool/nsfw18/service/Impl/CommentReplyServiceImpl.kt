@@ -1,5 +1,6 @@
 package com.it.onefool.nsfw18.service.Impl
 
+import com.alibaba.fastjson2.JSON
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
@@ -12,6 +13,7 @@ import com.it.onefool.nsfw18.common.service.CommentAndReplyService
 import com.it.onefool.nsfw18.domain.dto.CommentReplyContentDto
 import com.it.onefool.nsfw18.domain.dto.CommentReplyDto
 import com.it.onefool.nsfw18.domain.dto.UserDto
+import com.it.onefool.nsfw18.domain.entry.Comment
 import com.it.onefool.nsfw18.domain.entry.CommentReply
 import com.it.onefool.nsfw18.domain.vo.CommentReplyVo
 import com.it.onefool.nsfw18.exception.CustomizeException
@@ -48,7 +50,7 @@ class CommentReplyServiceImpl
     private lateinit var commentAndReplyService: CommentAndReplyService
 
     @Autowired
-    private lateinit var redisTemplate: RedisTemplate<String, Any>
+    private lateinit var redisTemplate: RedisTemplate<String, String>
 
     @Autowired
     private lateinit var jwtUtil: JwtUtil
@@ -147,29 +149,34 @@ class CommentReplyServiceImpl
             } catch (e: Exception) {
                 logger.error("删除回复评论失败,失败原因,{}", e.printStackTrace())
                 if (e.message.equals("SF")) {
+                    val com = JSON.toJSONString(comment)
                     redisTemplate.opsForZSet().add(
                         CacheConstants.COMMENTS_REPLY
                                 + comment!!.cartoonId
                                 + comment.chapterId
                                 + comment.commentId,
-                        comment, localDateUtils.localDateToDouble(comment.createdTime)
+                        com, localDateUtils.localDateToDouble(comment.createdTime)
                     )
                     it.setRollbackOnly()
                 } else if (e.message.equals("RF")) {
+                    val com = JSON.toJSONString(comment)
                     redisTemplate.opsForZSet().rank(
                         CacheConstants.COMMENTS_REPLY
                                 + comment!!.cartoonId
                                 + comment.chapterId
                                 + comment.commentId,
-                        comment
-                    ) ?: redisTemplate.opsForZSet().remove(
-                        //重试删除回复评论
-                        CacheConstants.COMMENTS_REPLY
-                                + comment.cartoonId
-                                + comment.chapterId
-                                + comment.commentId,
-                        comment
-                    )
+                        com
+                    ) ?: {
+                        val com = JSON.toJSONString(comment)
+                        redisTemplate.opsForZSet().remove(
+                            //重试删除回复评论
+                            CacheConstants.COMMENTS_REPLY
+                                    + comment.cartoonId
+                                    + comment.chapterId
+                                    + comment.commentId,
+                            com
+                        )
+                    }
                 }
                 commentAndReplyService.removeRedisUserComments(comment!!)
                 throw CustomizeException(
@@ -266,12 +273,13 @@ class CommentReplyServiceImpl
             )
             //不需要担心主线程结束后数据丢失，因为jvm仍然在引用,不会回收
             replyBySql.data.forEach {
+                val r = JSON.toJSONString(it)
                 redisTemplate.opsForZSet().add(
                     CacheConstants.COMMENTS_REPLY
                             + page.cartoonId
                             + page.chapterId
                             + page.commentId,
-                    it,
+                    r,
                     localDateUtils.localDateToDouble(it.createdTime)
                 )
             }
@@ -315,12 +323,13 @@ class CommentReplyServiceImpl
      * 删除回复评论重试方法
      */
     private fun deleteCommentReplyRetry(id: Int, comment: CommentReply?) {
+        val com = JSON.toJSONString(comment)
         val i = redisTemplate.opsForZSet().remove(
             CacheConstants.COMMENTS_REPLY
                     + comment!!.cartoonId
                     + comment.chapterId
                     + comment.commentId,
-            comment
+            com
         )
         if (i != null && i <= 0) throw RuntimeException("RF")
         val flag = this.baseMapper!!.deleteById(id)
@@ -387,14 +396,27 @@ class CommentReplyServiceImpl
      * 缓存回填则发生在查看数据库时进行
      */
     private fun redisInsertReply(r: CommentReply) {
+        val cr = JSON.toJSONString(r)
         val add = redisTemplate.opsForZSet().add(
             CacheConstants.COMMENTS_REPLY
                     + r.cartoonId
                     + r.chapterId
                     + r.commentId,
-            r,
+            cr,
             localDateUtils.localDateToDouble(r.createdTime)
         )
+
+        //转json存入redis,只存四个值，避免占用内存
+        val com = CommentReply().apply {
+            this.id = r.id
+            this.userId = r.userId
+            this.cartoonId = r.cartoonId
+            this.chapterId = r.chapterId
+        }
+        val json = JSON.toJSONString(com)
+        //插入评论数据,方便后面点赞数据在redis里面操作
+        redisTemplate.opsForValue().set(CacheConstants.COMMENT_REPLY + r.id, json)
+
         if (add != null && add) commentAndReplyService.addRedisUserComments(r)
         else logger.error("redis插入评论数据失败")
 

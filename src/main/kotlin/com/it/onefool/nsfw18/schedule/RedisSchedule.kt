@@ -1,7 +1,9 @@
 package com.it.onefool.nsfw18.schedule
 
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.scheduling.annotation.Schedules
 
@@ -16,11 +18,13 @@ class RedisSchedule {
         private val logger = LoggerFactory.getLogger(RedisSchedule::class.java)
     }
 
+    @Autowired
+    private lateinit var redisTemplate: RedisTemplate<String,String>
     /**
-     * 每天凌晨2点从redis中的评论数据同步到数据库
+     * 每天凌晨2点从redis中的点赞评论数据同步到数据库
      */
-//    @Scheduled(cron = "0 0 2 * * ?")
-    fun commentToDatabase(){
-
+    @Scheduled(cron = "0 0 2 * * ?")
+    fun commentLikeToDatabase(){
+        redisTemplate.opsForValue()
     }
 }

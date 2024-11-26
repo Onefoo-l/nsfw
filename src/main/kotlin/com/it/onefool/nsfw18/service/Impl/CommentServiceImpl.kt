@@ -1,5 +1,7 @@
 package com.it.onefool.nsfw18.service.Impl
 
+import com.alibaba.fastjson2.JSON
+import com.alibaba.fastjson2.JSONObject
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
@@ -22,20 +24,14 @@ import com.it.onefool.nsfw18.utils.BeanUtils
 import com.it.onefool.nsfw18.utils.JwtUtil
 import com.it.onefool.nsfw18.utils.LocalDateUtils
 import jakarta.servlet.http.HttpServletRequest
-import okhttp3.Request
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionTemplate
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import java.lang.RuntimeException
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import javax.servlet.ServletRequest
 
 /**
  * @author 97436
@@ -49,7 +45,7 @@ class CommentServiceImpl : ServiceImpl<CommentMapper?, Comment?>(), CommentServi
     }
 
     @Autowired
-    private lateinit var redisTemplate: RedisTemplate<String, Any>
+    private lateinit var redisTemplate: RedisTemplate<String, String>
 
     @Autowired
     private lateinit var jwtUtil: JwtUtil
@@ -228,7 +224,8 @@ class CommentServiceImpl : ServiceImpl<CommentMapper?, Comment?>(), CommentServi
             //判断是否是一级评论
             if (level == null || level == 0) {
                 userComment.forEach outer@{
-                    val commentAndReply = it.value as CommentReplyVo
+                    val value = it.value
+                    val commentAndReply = JSON.parse(value) as CommentReplyVo
                     if (commentReplyDto.id == commentAndReply.id && commentAndReply.level == 0) {
                         redisTemplate.opsForZSet().remove(
                             CacheConstants.COMMENTS_USER_ID + userDto.userId,
@@ -240,7 +237,8 @@ class CommentServiceImpl : ServiceImpl<CommentMapper?, Comment?>(), CommentServi
                 deleteCommentById(commentReplyDto)
             } else {
                 userComment.forEach outer@{
-                    val commentAndReply = it.value as CommentReplyVo
+                    val value = it.value
+                    val commentAndReply = JSON.parse(value) as CommentReplyVo
                     if (commentReplyDto.id == commentAndReply.id && commentAndReply.level == 1) {
                         redisTemplate.opsForZSet().remove(
                             CacheConstants.COMMENTS_USER_ID + userDto.userId,
@@ -289,7 +287,7 @@ class CommentServiceImpl : ServiceImpl<CommentMapper?, Comment?>(), CommentServi
         )
         val commentList = mutableListOf<CommentVo>()
         redisUserCommentSet!!.forEach {
-            val f = it as Comment
+            val f = JSON.parse(it) as Comment
             val commentVo = CommentVo().apply {
                 this.id = f.id
                 this.nickName = f.nickName
@@ -617,13 +615,26 @@ class CommentServiceImpl : ServiceImpl<CommentMapper?, Comment?>(), CommentServi
      * 往redis里面插入评论
      */
     private fun redisInsertReply(r: Comment) {
+        val str = JSON.toJSONString(r)
         val add = redisTemplate.opsForZSet().add(
             CacheConstants.COMMENTS
                     + r.cartoonId
                     + r.chapterId,
-            r,
+            str,
             localDateUtils.localDateToDouble(r.createdTime)
         )
+
+        //转json存入redis,只存四个值，避免占用内存
+        val com = Comment().apply {
+            this.id = r.id
+            this.userId = r.userId
+            this.cartoonId = r.cartoonId
+            this.chapterId = r.chapterId
+        }
+        val json = JSON.toJSONString(com)
+        //插入评论数据,方便后面点赞数据在redis里面操作
+        redisTemplate.opsForValue().set(CacheConstants.COMMENT + r.id, json)
+
         if (add == null || !add) {
             logger.error("redis插入评论数据失败")
             throw CustomizeException(

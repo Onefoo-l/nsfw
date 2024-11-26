@@ -13,7 +13,7 @@ import java.io.Serializable;
 @TableName(value ="comment_like")
 public class CommentLike implements Serializable {
     /**
-     * 
+     * 评论点赞id
      */
     @TableId(value = "id")
     private Integer id;
@@ -30,45 +30,28 @@ public class CommentLike implements Serializable {
     @TableField(value = "comment_id")
     private Integer commentId;
 
+    private Integer deleted;
 
-    /**
-     * 
-     */
     public Integer getId() {
         return id;
     }
 
-    /**
-     * 
-     */
     public void setId(Integer id) {
         this.id = id;
     }
 
-    /**
-     * 点赞人的ID
-     */
     public Integer getUserId() {
         return userId;
     }
 
-    /**
-     * 点赞人的ID
-     */
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    /**
-     * 被点赞的评论id
-     */
     public Integer getCommentId() {
         return commentId;
     }
 
-    /**
-     * 被点赞的评论id
-     */
     public void setCommentId(Integer commentId) {
         this.commentId = commentId;
     }

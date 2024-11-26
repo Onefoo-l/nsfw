@@ -1,5 +1,6 @@
 package com.it.onefool.nsfw18.common.service.Impl
 
+import com.alibaba.fastjson2.JSON
 import com.it.onefool.nsfw18.common.constants.CacheConstants
 import com.it.onefool.nsfw18.common.service.CommentAndReplyService
 import com.it.onefool.nsfw18.domain.entry.Comment
@@ -29,7 +30,7 @@ class CommentAndReplyServiceImpl : CommentAndReplyService {
     private lateinit var beanUtils: BeanUtils
 
     @Autowired
-    private lateinit var redisTemplate: RedisTemplate<String?, Any>
+    private lateinit var redisTemplate: RedisTemplate<String, String>
 
     @Autowired
     private lateinit var localDateUtil: LocalDateUtils
@@ -50,10 +51,11 @@ class CommentAndReplyServiceImpl : CommentAndReplyService {
         val replyVo = CommentReplyVo()
         //一级评论的插入记录使用评论回复vo对象
         beanUtils.copyCommentAndCommentReplyVo(r, replyVo)
+        val rv = JSON.toJSONString(replyVo)
         retry.executeWithRetry {
             val flag = redisTemplate.opsForZSet().add(
                 CacheConstants.COMMENTS_USER_ID + r.userId,
-                replyVo,
+                rv,
                 localDateUtil.localDateToDouble(r.createdTime)
             )
             if (!flag!!) {
@@ -74,12 +76,13 @@ class CommentAndReplyServiceImpl : CommentAndReplyService {
      */
     override fun addRedisUserComments(r: CommentReply) {
         val replyVo = CommentReplyVo()
+        val rv = JSON.toJSONString(replyVo)
         //二级评论的插入记录使用评论回复vo对象
         beanUtils.copyCommentReplyAndCommentReplyVo(r, replyVo)
         retry.executeWithRetry {
             val flag = redisTemplate.opsForZSet().add(
                 CacheConstants.COMMENTS_USER_ID + r.userId,
-                replyVo,
+                rv,
                 localDateUtil.localDateToDouble(r.createdTime)
             )
             if (!flag!!) {
@@ -91,12 +94,13 @@ class CommentAndReplyServiceImpl : CommentAndReplyService {
 
     override fun removeRedisUserComments(r: Comment) {
         val replyVo = CommentReplyVo()
+        val rv = JSON.toJSONString(replyVo)
         //一级评论的删除记录使用评论回复vo对象
         beanUtils.copyCommentAndCommentReplyVo(r, replyVo)
         retry.executeWithRetry {
             val flag = redisTemplate.opsForZSet().remove(
                 CacheConstants.COMMENTS_USER_ID + r.userId,
-                replyVo
+                rv
             )
             if (flag == null || flag <= 0) {
                 logger.error("在redis中删除用户评论格外记录失败,重试中....")
@@ -107,12 +111,13 @@ class CommentAndReplyServiceImpl : CommentAndReplyService {
 
     override fun removeRedisUserComments(r: CommentReply) {
         val replyVo = CommentReplyVo()
+        val rv = JSON.toJSONString(replyVo)
         //二级评论的删除记录使用评论回复vo对象
         beanUtils.copyCommentReplyAndCommentReplyVo(r, replyVo)
         retry.executeWithRetry {
             val flag = redisTemplate.opsForZSet().remove(
                 CacheConstants.COMMENTS_USER_ID + r.userId,
-                replyVo
+                rv
             )
             if (flag == null || flag <= 0) {
                 logger.error("在redis中删除用户评论格外记录失败,重试中.....")
