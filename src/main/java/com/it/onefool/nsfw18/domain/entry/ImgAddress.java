@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * 
@@ -18,6 +19,9 @@ public class ImgAddress implements Serializable {
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+
+    @TableField(value = "img_name")
+    private String imgName;
 
     /**
      * 图片地址
@@ -49,6 +53,14 @@ public class ImgAddress implements Serializable {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getImgName() {
+        return imgName;
+    }
+
+    public void setImgName(String imgName) {
+        this.imgName = imgName;
     }
 
     /**
@@ -94,45 +106,32 @@ public class ImgAddress implements Serializable {
     }
 
     @Override
-    public boolean equals(Object that) {
-        if (this == that) {
-            return true;
-        }
-        if (that == null) {
-            return false;
-        }
-        if (getClass() != that.getClass()) {
-            return false;
-        }
-        ImgAddress other = (ImgAddress) that;
-        return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getAddress() == null ? other.getAddress() == null : this.getAddress().equals(other.getAddress()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ImgAddress that = (ImgAddress) o;
+        return Objects.equals(id, that.id) && Objects.equals(imgName, that.imgName) && Objects.equals(address, that.address) && Objects.equals(createTime, that.createTime) && Objects.equals(updateTime, that.updateTime);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((getId() == null) ? 0 : getId().hashCode());
-        result = prime * result + ((getAddress() == null) ? 0 : getAddress().hashCode());
-        result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
-        result = prime * result + ((getUpdateTime() == null) ? 0 : getUpdateTime().hashCode());
+        int result = Objects.hashCode(id);
+        result = 31 * result + Objects.hashCode(imgName);
+        result = 31 * result + Objects.hashCode(address);
+        result = 31 * result + Objects.hashCode(createTime);
+        result = 31 * result + Objects.hashCode(updateTime);
         return result;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", address=").append(address);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
-        sb.append("]");
-        return sb.toString();
+        return "ImgAddress{" +
+                "id=" + id +
+                ", imgName='" + imgName + '\'' +
+                ", address='" + address + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

@@ -27,7 +27,10 @@ public enum StatusCode {
     ADD_LABEL_ERROR(50003, ResponseConstants.Companion.getADD_LABEL_ERROR()),
     USERNAME_IS_EXIST(50004, ResponseConstants.Companion.getUSERNAME_IS_EXIST()),
     TRANSACTION_INSERTION_FAILED(50004, ResponseConstants.Companion.getTRANSACTION_INSERTION_FAILED()),
-    DELETE_COMMENT_FAIL(50005, ResponseConstants.Companion.getDELETE_COMMENT_FAIL());
+    DELETE_COMMENT_FAIL(50005, ResponseConstants.Companion.getDELETE_COMMENT_FAIL()),
+    ERROR_UPLOAD_WITH_THE_FILE(50006, ResponseConstants.Companion.getERROR_UPLOAD_WITH_THE_FILE()),
+    ERROR_DOW_WITH_THE_FILE(50007, ResponseConstants.Companion.getERROR_DOW_WITH_THE_FILE());
+
     private final Integer code;
 
     private final String message;
