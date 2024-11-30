@@ -155,7 +155,7 @@ class CommentReplyServiceImpl
                                 + comment!!.cartoonId
                                 + comment.chapterId
                                 + comment.commentId,
-                        com, localDateUtils.localDateToDouble(comment.createdTime)
+                        com, LocalDateUtils.localDateToDouble(comment.createdTime)
                     )
                     it.setRollbackOnly()
                 } else if (e.message.equals("RF")) {
@@ -280,7 +280,7 @@ class CommentReplyServiceImpl
                             + page.chapterId
                             + page.commentId,
                     r,
-                    localDateUtils.localDateToDouble(it.createdTime)
+                    LocalDateUtils.localDateToDouble(it.createdTime)
                 )
             }
         }, Executors.newSingleThreadExecutor())
@@ -403,7 +403,7 @@ class CommentReplyServiceImpl
                     + r.chapterId
                     + r.commentId,
             cr,
-            localDateUtils.localDateToDouble(r.createdTime)
+            LocalDateUtils.localDateToDouble(r.createdTime)
         )
 
         //转json存入redis,只存四个值，避免占用内存

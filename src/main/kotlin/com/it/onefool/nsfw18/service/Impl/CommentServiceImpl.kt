@@ -60,9 +60,6 @@ class CommentServiceImpl : ServiceImpl<CommentMapper?, Comment?>(), CommentServi
     private lateinit var transactionTemplate: TransactionTemplate
 
     @Autowired
-    private lateinit var localDateUtils: LocalDateUtils
-
-    @Autowired
     private lateinit var commentAndReplyService: CommentAndReplyService
 
     /**
@@ -621,7 +618,7 @@ class CommentServiceImpl : ServiceImpl<CommentMapper?, Comment?>(), CommentServi
                     + r.cartoonId
                     + r.chapterId,
             str,
-            localDateUtils.localDateToDouble(r.createdTime)
+            LocalDateUtils.localDateToDouble(r.createdTime)
         )
 
         //转json存入redis,只存四个值，避免占用内存

@@ -33,9 +33,6 @@ class CommentAndReplyServiceImpl : CommentAndReplyService {
     private lateinit var redisTemplate: RedisTemplate<String, String>
 
     @Autowired
-    private lateinit var localDateUtil: LocalDateUtils
-
-    @Autowired
     private lateinit var retry: RetryTemplateUtil<Boolean>
 
     /**
@@ -56,7 +53,7 @@ class CommentAndReplyServiceImpl : CommentAndReplyService {
             val flag = redisTemplate.opsForZSet().add(
                 CacheConstants.COMMENTS_USER_ID + r.userId,
                 rv,
-                localDateUtil.localDateToDouble(r.createdTime)
+                LocalDateUtils.localDateToDouble(r.createdTime)
             )
             if (!flag!!) {
                 logger.error("在redis中添加用户评论格外记录失败,重试中....")
@@ -83,7 +80,7 @@ class CommentAndReplyServiceImpl : CommentAndReplyService {
             val flag = redisTemplate.opsForZSet().add(
                 CacheConstants.COMMENTS_USER_ID + r.userId,
                 rv,
-                localDateUtil.localDateToDouble(r.createdTime)
+                LocalDateUtils.localDateToDouble(r.createdTime)
             )
             if (!flag!!) {
                 logger.error("在redis中添加用户评论格外记录失败,重试中...")

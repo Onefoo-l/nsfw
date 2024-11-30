@@ -1,8 +1,9 @@
+package com.it.onefool.nsfw18.service.Impl
+
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.it.onefool.nsfw18.domain.entry.CommentReplyLike
 import com.it.onefool.nsfw18.mapper.CommentReplyLikeMapper
 import com.it.onefool.nsfw18.service.CommentReplyLikeService
-import com.it.onefool.nsfw18.service.Impl.CommentLikeServiceImpl
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 

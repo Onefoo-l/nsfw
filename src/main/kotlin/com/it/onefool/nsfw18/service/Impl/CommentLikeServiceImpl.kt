@@ -9,7 +9,6 @@ import com.it.onefool.nsfw18.domain.dto.UserDto
 import com.it.onefool.nsfw18.domain.entry.Comment
 import com.it.onefool.nsfw18.domain.entry.CommentLike
 import com.it.onefool.nsfw18.domain.entry.CommentReply
-import com.it.onefool.nsfw18.domain.entry.CommentReplyLike
 import com.it.onefool.nsfw18.exception.CustomizeException
 import com.it.onefool.nsfw18.mapper.CommentLikeMapper
 import com.it.onefool.nsfw18.service.CommentLikeService
@@ -41,9 +40,6 @@ class CommentLikeServiceImpl
     @Autowired
     private lateinit var jwtUtil: JwtUtil
 
-    @Autowired
-    private lateinit var localDateUtils: LocalDateUtils
-
     /**
      * 点赞评论(由于点赞可能处于高并发下，决定凌晨2点定时同步到数据库)
      * id: 评论id level: 评论级别
@@ -55,7 +51,13 @@ class CommentLikeServiceImpl
         )
         when (level) {
             0 -> {
-                like(CacheConstants.COMMENT_LIKE, CacheConstants.COMMENTS, id, userDto, Comment::class.java)
+                like(
+                    CacheConstants.COMMENT_LIKE,
+                    CacheConstants.COMMENTS,
+                    id,
+                    userDto,
+                    Comment::class.java
+                )
                 return Result.ok()
             }
 
@@ -89,11 +91,11 @@ class CommentLikeServiceImpl
         when (level) {
             0 -> {
                 //一级评论取消点赞
-                redisTemplate.opsForValue().decrement(CacheConstants.COMMENT_LIKE, 1)
+                redisTemplate.opsForValue().decrement(CacheConstants.COMMENT_LIKE + id, 1)
                 // 当前点赞记录
                 val userKey = CacheConstants.COMMENT_LIKE + "user:$id"
                 //取消点赞记录
-                redisTemplate.delete(userKey)
+                redisTemplate.opsForSet().remove(userKey,userDto.userId.toString())
                 //从redis中获取评论详情后去修改评论列表中的点赞数量
                 val json = redisTemplate.opsForValue().get(
                     CacheConstants.COMMENTS + id
@@ -120,7 +122,7 @@ class CommentLikeServiceImpl
                         redisTemplate.opsForZSet().add(
                             CacheConstants.COMMENT + comment.cartoonId + comment.chapterId,
                             comJson,
-                            localDateUtils.localDateToDouble(com.createdTime)
+                            LocalDateUtils.localDateToDouble(com.createdTime)
                         )
                     }
                 }
@@ -130,11 +132,11 @@ class CommentLikeServiceImpl
             1 -> {
 
                 //一级评论取消点赞
-                redisTemplate.opsForValue().decrement(CacheConstants.COMMENT_REPLY_LIKE, 1)
+                redisTemplate.opsForValue().decrement(CacheConstants.COMMENT_REPLY_LIKE + id, 1)
                 // 当前点赞记录
                 val userKey = CacheConstants.COMMENT_REPLY_LIKE + "user:$id"
                 //取消点赞记录
-                redisTemplate.delete(userKey)
+                redisTemplate.opsForSet().remove(userKey,userDto.userId.toString())
                 //从redis中获取评论详情后去修改评论列表中的点赞数量
                 val json = redisTemplate.opsForValue().get(
                     CacheConstants.COMMENTS_REPLY + id
@@ -163,7 +165,7 @@ class CommentLikeServiceImpl
                         redisTemplate.opsForZSet().add(
                             CacheConstants.COMMENTS_REPLY + commentR.cartoonId + commentR.chapterId,
                             comJson,
-                            localDateUtils.localDateToDouble(com.createdTime)
+                            LocalDateUtils.localDateToDouble(com.createdTime)
                         )
                     }
                 }
@@ -196,8 +198,8 @@ class CommentLikeServiceImpl
         )
         // 当前点赞记录
         val userKey = strLike + "user:$id"
-        //记录点赞人的 ID
-        redisTemplate.opsForValue().set(userKey, userDto.userId.toString())
+        //记录点赞人的 ID   一个评论点赞记录存在被多个人点赞的情况下
+        redisTemplate.opsForSet().add(userKey, userDto.userId.toString())
         //从redis中获取评论详情后去修改评论列表中的点赞数量
         val json = redisTemplate.opsForValue().get(
             str + id
@@ -268,7 +270,7 @@ class CommentLikeServiceImpl
                 val com = JSON.toJSONString(comm)
                 redisTemplate.opsForZSet().add(
                     str + cCartoonId + cChapterId, com,
-                    localDateUtils.localDateToDouble(
+                    LocalDateUtils.localDateToDouble(
                         comm::class.java.getDeclaredField("createdTime")
                             .get(comme.constructors) as LocalDateTime
                     )
