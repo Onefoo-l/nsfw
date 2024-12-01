@@ -4,14 +4,14 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 
  * @TableName chapter
  */
-@TableName(value ="chapter")
+@TableName(value = "chapter")
 public class Chapter implements Serializable {
     /**
      * id
@@ -38,13 +38,18 @@ public class Chapter implements Serializable {
     private Integer cartoonId;
 
     /**
-     * 
+     * 漫画图片id
+     */
+    @TableField(value = "imgAddress_id")
+    private Integer imgAddressId;
+    /**
+     *
      */
     @TableField(value = "create_time")
     private LocalDateTime createTime;
 
     /**
-     * 
+     *
      */
     @TableField(value = "update_time")
     private LocalDateTime updateTime;
@@ -78,6 +83,14 @@ public class Chapter implements Serializable {
         this.chapterId = chapterId;
     }
 
+    public Integer getImgAddressId() {
+        return imgAddressId;
+    }
+
+    public void setImgAddressId(Integer imgAddressId) {
+        this.imgAddressId = imgAddressId;
+    }
+
     /**
      * 章节标题
      */
@@ -107,28 +120,28 @@ public class Chapter implements Serializable {
     }
 
     /**
-     * 
+     *
      */
     public LocalDateTime getCreateTime() {
         return createTime;
     }
 
     /**
-     * 
+     *
      */
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
     /**
-     * 
+     *
      */
     public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
     /**
-     * 
+     *
      */
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
@@ -147,11 +160,11 @@ public class Chapter implements Serializable {
         }
         Chapter other = (Chapter) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getChapterId() == null ? other.getChapterId() == null : this.getChapterId().equals(other.getChapterId()))
-            && (this.getChapterName() == null ? other.getChapterName() == null : this.getChapterName().equals(other.getChapterName()))
-            && (this.getCartoonId() == null ? other.getCartoonId() == null : this.getCartoonId().equals(other.getCartoonId()))
-            && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
-            && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
+                && (this.getChapterId() == null ? other.getChapterId() == null : this.getChapterId().equals(other.getChapterId()))
+                && (this.getChapterName() == null ? other.getChapterName() == null : this.getChapterName().equals(other.getChapterName()))
+                && (this.getCartoonId() == null ? other.getCartoonId() == null : this.getCartoonId().equals(other.getCartoonId()))
+                && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
+                && (this.getUpdateTime() == null ? other.getUpdateTime() == null : this.getUpdateTime().equals(other.getUpdateTime()));
     }
 
     @Override
