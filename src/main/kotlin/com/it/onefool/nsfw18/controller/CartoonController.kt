@@ -6,6 +6,7 @@ import com.it.onefool.nsfw18.common.PageRequestDto
 import com.it.onefool.nsfw18.common.Result
 import com.it.onefool.nsfw18.common.StatusCode
 import com.it.onefool.nsfw18.common.controller.AbstractCoreController
+import com.it.onefool.nsfw18.domain.dto.CartoonDto
 import com.it.onefool.nsfw18.domain.entry.Cartoon
 import com.it.onefool.nsfw18.domain.vo.CartoonVo
 import com.it.onefool.nsfw18.service.CartoonService
@@ -112,5 +113,23 @@ class CartoonController : AbstractCoreController<Cartoon>() {
             }
         }
         return Result.error(StatusCode.PARAM_ERROR)
+    }
+
+    /**
+     * 添加漫画信息
+     */
+    @PostMapping("/add")
+    @Log("添加漫画信息")
+    fun addCartoon(cartoonDto: CartoonDto?): Result<String>{
+        return cartoonService.addCartoon(cartoonDto)
+    }
+
+    /**
+     * 修改漫画信息
+     */
+    @PostMapping("/update")
+    @Log("/修改漫画信息")
+    fun updateCartoon(cartoonDto: CartoonDto?): Result<String>{
+        return cartoonService.updateCartoon(cartoonDto)
     }
 }

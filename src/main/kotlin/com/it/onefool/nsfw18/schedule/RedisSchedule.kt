@@ -47,7 +47,7 @@ class RedisSchedule {
      * 每天凌晨2点从redis中的点赞评论数据同步到数据库
      * (以redis为准，数据库只做持久化)
      */
-    @Scheduled(cron = "30 47 17 * * ?")
+    @Scheduled(cron = "30 04 21 * * ?")
     fun commentLikeToDatabase() {
         var likeSizeSum = 0
         var likeReplySizeSum = 0
@@ -157,7 +157,8 @@ class RedisSchedule {
             "同步完成：新增一级 ${toAdd.size} 条，" +
                     "删除一级 ${toRemove.size} 条，" +
                     "新增二级 ${toAddReply.size} 条，" +
-                    "删除二级 ${toRemoveReply.size} 条"
+                    "删除二级 ${toRemoveReply.size} 条" +
+                    "时间为{${LocalDateUtils.dateTimeToMyTime(LocalDateTime.now())}}"
         )
 
 

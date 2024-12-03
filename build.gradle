@@ -22,6 +22,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.2.7'
@@ -41,4 +42,7 @@ dependencies {
 }
 
 tasks.named('test') {
+}
+tasks.test {
+    useJUnitPlatform()  // 启用 JUnit 5 平台
 }

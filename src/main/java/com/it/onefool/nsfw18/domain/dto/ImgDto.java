@@ -5,30 +5,33 @@ package com.it.onefool.nsfw18.domain.dto;
  * @Date 2024/7/9 2:22
  */
 public class ImgDto {
-    private Integer imgId;
-    private String imgUrl;
+    private Integer cartoonId;
 
-    public Integer getImgId() {
-        return imgId;
+    private Integer chapterId;
+
+
+
+    public Integer getCartoonId() {
+        return cartoonId;
     }
 
-    public void setImgId(Integer imgId) {
-        this.imgId = imgId;
+    public void setCartoonId(Integer cartoonId) {
+        this.cartoonId = cartoonId;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public Integer getChapterId() {
+        return chapterId;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setChapterId(Integer chapterId) {
+        this.chapterId = chapterId;
     }
 
     @Override
     public String toString() {
         return "ImgDto{" +
-                "imgId=" + imgId +
-                ", imgUrl='" + imgUrl + '\'' +
+                "cartoonId=" + cartoonId +
+                ", chapterId=" + chapterId +
                 '}';
     }
 }

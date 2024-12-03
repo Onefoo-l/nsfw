@@ -1,7 +1,5 @@
 package com.it.onefool.nsfw18.domain.vo;
 
-import com.it.onefool.nsfw18.domain.dto.ImgDto;
-
 import java.util.List;
 
 /**
@@ -14,7 +12,7 @@ public class ChapterImgVo {
     private Integer cartoonId;
     private Integer chapterId;
     private String chapterName;
-    private List<ImgDto> imgDtoS;
+    private List<ImgVo> imgDtoS;
 
 
     public Integer getCartoonId() {
@@ -41,11 +39,11 @@ public class ChapterImgVo {
         this.chapterName = chapterName;
     }
 
-    public List<ImgDto> getImgDtoS() {
+    public List<ImgVo> getImgDtoS() {
         return imgDtoS;
     }
 
-    public void setImgDtoS(List<ImgDto> imgDtoS) {
+    public void setImgDtoS(List<ImgVo> imgDtoS) {
         this.imgDtoS = imgDtoS;
     }
 

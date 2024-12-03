@@ -53,7 +53,9 @@ class CommentLikeServiceImpl
             0 -> {
                 like(
                     CacheConstants.COMMENT_LIKE,
+                    CacheConstants.COMMENT,
                     CacheConstants.COMMENTS,
+                    CacheConstants.THUMBS_UP_USERS_KEY,
                     id,
                     userDto,
                     Comment::class.java
@@ -64,7 +66,9 @@ class CommentLikeServiceImpl
             1 -> {
                 like(
                     CacheConstants.COMMENT_REPLY_LIKE,
+                    CacheConstants.COMMENT_REPLY,
                     CacheConstants.COMMENTS_REPLY,
+                    CacheConstants.THUMBS_UP_USERS_REPLY_KEY,
                     id,
                     userDto,
                     CommentReply::class.java
@@ -76,12 +80,12 @@ class CommentLikeServiceImpl
                 return Result.error()
             }
         }
-
     }
 
     /**
      * 取消点赞评论
-     * id: 评论id level: 评论级别
+     * id: 评论id
+     * level: 评论级别
      */
     override fun deleteCommentLike(id: Int, level: Int, request: HttpServletRequest)
             : Result<String> {
@@ -93,34 +97,34 @@ class CommentLikeServiceImpl
                 //一级评论取消点赞
                 redisTemplate.opsForValue().decrement(CacheConstants.COMMENT_LIKE + id, 1)
                 // 当前点赞记录
-                val userKey = CacheConstants.COMMENT_LIKE + "user:$id"
+                val userKey = CacheConstants.THUMBS_UP_USERS_KEY + "$id"
                 //取消点赞记录
-                redisTemplate.opsForSet().remove(userKey,userDto.userId.toString())
+                redisTemplate.opsForList().remove(userKey, 0, userDto.userId.toString())
                 //从redis中获取评论详情后去修改评论列表中的点赞数量
                 val json = redisTemplate.opsForValue().get(
-                    CacheConstants.COMMENTS + id
+                    CacheConstants.COMMENT + id
                 )
                 //如果没有数据说明，添加评论的时候redis添加失败，又或者是淘汰策略删除了评论，导致评论没有
                 //不能从db里面查，点赞全程redis操作
                 if (json == null) {
-                    redisTemplate.opsForValue().decrement(CacheConstants.COMMENT_LIKE + id, 1)
+//                    redisTemplate.opsForValue().decrement(CacheConstants.COMMENT_LIKE + id, 1)
                     throw CustomizeException(StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message())
                 }
                 val comment = JSON.parse(json.toString()) as Comment
                 val redisResult = redisTemplate.opsForZSet().range(
-                    CacheConstants.COMMENT + comment.cartoonId + comment.chapterId, 0, 1
+                    CacheConstants.COMMENTS + comment.cartoonId + comment.chapterId, 0, 1
                 ) ?: throw CustomizeException(StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message())
                 redisResult.forEach { f ->
                     val com = JSON.parse(f) as Comment
                     if (com.id == comment.id) {
                         redisTemplate.opsForZSet().remove(
-                            CacheConstants.COMMENT + comment.cartoonId + comment.chapterId, com
+                            CacheConstants.COMMENTS + comment.cartoonId + comment.chapterId, com
                         )
-                        val likes = getLikes(CacheConstants.COMMENT_LIKE) ?: 0
+                        val likes = getLikes(CacheConstants.COMMENT_LIKE + id) ?: 0
                         com.likes = likes.toInt()
                         val comJson = JSON.toJSONString(com)
                         redisTemplate.opsForZSet().add(
-                            CacheConstants.COMMENT + comment.cartoonId + comment.chapterId,
+                            CacheConstants.COMMENTS + comment.cartoonId + comment.chapterId,
                             comJson,
                             LocalDateUtils.localDateToDouble(com.createdTime)
                         )
@@ -134,22 +138,24 @@ class CommentLikeServiceImpl
                 //一级评论取消点赞
                 redisTemplate.opsForValue().decrement(CacheConstants.COMMENT_REPLY_LIKE + id, 1)
                 // 当前点赞记录
-                val userKey = CacheConstants.COMMENT_REPLY_LIKE + "user:$id"
+                val userKey = CacheConstants.THUMBS_UP_USERS_REPLY_KEY + "$id"
                 //取消点赞记录
-                redisTemplate.opsForSet().remove(userKey,userDto.userId.toString())
+                redisTemplate.opsForList().remove(userKey, 0, userDto.userId.toString())
                 //从redis中获取评论详情后去修改评论列表中的点赞数量
                 val json = redisTemplate.opsForValue().get(
-                    CacheConstants.COMMENTS_REPLY + id
+                    CacheConstants.COMMENT_REPLY + id
                 )
                 //如果没有数据说明，添加评论的时候redis添加失败，又或者是淘汰策略删除了评论，导致评论没有
                 //不能从db里面查，点赞全程redis操作
                 if (json == null) {
-                    redisTemplate.opsForValue().decrement(CacheConstants.COMMENT_REPLY_LIKE + id, 1)
+//                    redisTemplate.opsForValue().decrement(CacheConstants.COMMENT_REPLY_LIKE + id, 1)
                     throw CustomizeException(StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message())
                 }
                 val commentR = JSON.parse(json.toString()) as CommentReply
                 val redisResult = redisTemplate.opsForZSet().range(
-                    CacheConstants.COMMENT_REPLY + commentR.cartoonId + commentR.chapterId, 0, 1
+                    CacheConstants.COMMENTS_REPLY
+                            + commentR.cartoonId
+                            + commentR.chapterId, 0, 1
                 ) ?: throw CustomizeException(StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message())
                 redisResult.forEach { f ->
                     val com = JSON.parse(f) as CommentReply
@@ -159,7 +165,7 @@ class CommentLikeServiceImpl
                                     + commentR.cartoonId
                                     + commentR.chapterId, com
                         )
-                        val likes = getLikes(CacheConstants.COMMENT_REPLY_LIKE) ?: 0
+                        val likes = getLikes(CacheConstants.COMMENT_REPLY_LIKE + id) ?: 0
                         com.likes = likes.toInt()
                         val comJson = JSON.toJSONString(com)
                         redisTemplate.opsForZSet().add(
@@ -186,20 +192,29 @@ class CommentLikeServiceImpl
     }
 
     /**
-     * strLike: 点赞记录的前缀key
-     * str: 评论的key
+     * strLike: 点赞记录的前缀key 存入redis的评论点赞
+     * str: 评论的key  存入redis中一级评论少量值的key
+     * strS: 存入redis的一级评论Key
      * id: 评论的id
      * userDto: 用户信息
      */
-    private fun <T> like(strLike: String, str: String, id: Int, userDto: UserDto, t: Class<T>) {
+    private fun <T> like(
+        strLike: String,
+        str: String,
+        strS: String,
+        thumbs: String,
+        id: Int,
+        userDto: UserDto,
+        t: Class<T>
+    ) {
         //评论点赞 +1
         redisTemplate.opsForValue().increment(
             strLike + id, 1
         )
         // 当前点赞记录
-        val userKey = strLike + "user:$id"
+        val userKey = thumbs + "$id"
         //记录点赞人的 ID   一个评论点赞记录存在被多个人点赞的情况下
-        redisTemplate.opsForSet().add(userKey, userDto.userId.toString())
+        redisTemplate.opsForList().rightPush(userKey, userDto.userId.toString())
         //从redis中获取评论详情后去修改评论列表中的点赞数量
         val json = redisTemplate.opsForValue().get(
             str + id
@@ -228,8 +243,9 @@ class CommentLikeServiceImpl
             chapterId = commentReply.chapterId
             cid = commentReply.id
         }
+        //查询具体的详情
         val redisResult = redisTemplate.opsForZSet().range(
-            str + cartoonId + chapterId, 0, 1
+            strS + cartoonId + chapterId, 0, 1
         )
         //更新点赞数量
         redisResult?.forEach { f ->
@@ -258,7 +274,7 @@ class CommentLikeServiceImpl
             //如果是同一个评论id的话说明是在同一个评论下进行操作的
             if (cCid == cid) {
                 redisTemplate.opsForZSet().remove(
-                    str + cCartoonId + cChapterId, f
+                    strS + cCartoonId + cChapterId, f
                 )
                 val likeSize = getLikes(strLike + id)
                 cLikes = likeSize!!.toInt()
@@ -269,7 +285,7 @@ class CommentLikeServiceImpl
                 field.set(comme.constructors, cLikes)
                 val com = JSON.toJSONString(comm)
                 redisTemplate.opsForZSet().add(
-                    str + cCartoonId + cChapterId, com,
+                    strS + cCartoonId + cChapterId, com,
                     LocalDateUtils.localDateToDouble(
                         comm::class.java.getDeclaredField("createdTime")
                             .get(comme.constructors) as LocalDateTime

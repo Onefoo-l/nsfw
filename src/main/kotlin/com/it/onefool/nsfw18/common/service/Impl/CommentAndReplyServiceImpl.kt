@@ -6,7 +6,6 @@ import com.it.onefool.nsfw18.common.service.CommentAndReplyService
 import com.it.onefool.nsfw18.domain.entry.Comment
 import com.it.onefool.nsfw18.domain.entry.CommentReply
 import com.it.onefool.nsfw18.domain.vo.CommentReplyVo
-import com.it.onefool.nsfw18.exception.CustomizeException
 import com.it.onefool.nsfw18.utils.BeanUtils
 import com.it.onefool.nsfw18.utils.LocalDateUtils
 import com.it.onefool.nsfw18.utils.RetryTemplateUtil

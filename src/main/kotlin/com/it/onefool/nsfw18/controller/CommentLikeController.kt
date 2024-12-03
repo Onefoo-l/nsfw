@@ -1,5 +1,6 @@
 package com.it.onefool.nsfw18.controller
 
+import RateLimitWithLock
 import com.it.onefool.nsfw18.aop.log.Log
 import com.it.onefool.nsfw18.common.Result
 import com.it.onefool.nsfw18.service.CommentLikeService
@@ -34,6 +35,12 @@ class CommentLikeController {
      */
     @Log("点赞评论")
     @GetMapping("/add")
+    @RateLimitWithLock("lock:like",
+        "rate:limit",
+        500,
+        3000,
+        5,
+        100)
     fun addCommentLike(
         @RequestParam id: Int,
         @RequestParam level: Int,
@@ -49,6 +56,12 @@ class CommentLikeController {
      */
     @Log("取消点赞评论")
     @GetMapping("/delete")
+    @RateLimitWithLock("lock:dislike",
+        "rate:disLimit",
+        500,
+        3000,
+        5,
+        100)
     fun deleteCommentLike(
         @RequestParam id: Int,
         @RequestParam level: Int,

@@ -1,5 +1,6 @@
 package com.it.onefool.nsfw18.domain.entry;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -15,7 +16,7 @@ public class CommentLike implements Serializable {
     /**
      * 评论点赞id
      */
-    @TableId(value = "id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -30,7 +31,6 @@ public class CommentLike implements Serializable {
     @TableField(value = "comment_id")
     private Integer commentId;
 
-    private Integer deleted;
 
     public Integer getId() {
         return id;

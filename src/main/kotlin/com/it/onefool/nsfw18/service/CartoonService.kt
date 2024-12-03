@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService
 import com.it.onefool.nsfw18.common.PageInfo
 import com.it.onefool.nsfw18.common.PageRequestDto
 import com.it.onefool.nsfw18.common.Result
+import com.it.onefool.nsfw18.domain.dto.CartoonDto
 import com.it.onefool.nsfw18.domain.entry.Cartoon
 import com.it.onefool.nsfw18.domain.vo.CartoonVo
 
@@ -42,4 +43,14 @@ interface CartoonService : IService<Cartoon> {
      * 多条件查询(优先级 1.漫画名称 2.漫画作者 3.标签 4.漫画人物)
      */
     fun findByCondition(str: String, pages: Long, size: Long, type: Int): Result<PageInfo<CartoonVo>>
+
+    /**
+     * 添加漫画信息
+     */
+    fun addCartoon(cartoonDto: CartoonDto?): Result<String>
+
+    /**
+     * 修改漫画信息
+     */
+    fun updateCartoon(cartoonDto: CartoonDto?): Result<String>
 }

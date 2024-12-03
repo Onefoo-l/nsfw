@@ -6,19 +6,23 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.it.onefool.nsfw18.common.Result
 import com.it.onefool.nsfw18.common.StatusCode
 import com.it.onefool.nsfw18.config.MinioConfig
+import com.it.onefool.nsfw18.domain.dto.ImgDto
+import com.it.onefool.nsfw18.domain.entry.Chapter
 import com.it.onefool.nsfw18.domain.entry.ImgAddress
 import com.it.onefool.nsfw18.exception.CustomizeException
 import com.it.onefool.nsfw18.mapper.ImgAddressMapper
+import com.it.onefool.nsfw18.service.ChapterService
 import com.it.onefool.nsfw18.service.ImgAddressService
-import io.minio.GetObjectArgs
-import io.minio.MinioClient
-import io.minio.PutObjectArgs
+import io.minio.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.StreamUtils
 import org.springframework.web.multipart.MultipartFile
-import java.io.InputStream
+import java.time.LocalDateTime
+
 
 /**
  * @author 97436
@@ -38,6 +42,10 @@ class ImgAddressServiceImpl
     @Autowired
     private lateinit var minioConfig: MinioConfig
 
+    @Autowired
+    @Lazy
+    private lateinit var chapterService: ChapterService
+
     /**
      * 根据图片id查询图片地址
      */
@@ -55,30 +63,40 @@ class ImgAddressServiceImpl
     /**
      * 上传图片
      */
-    override fun upload(uploadFile: MultipartFile?): Result<String> {
-        uploadFile ?: throw CustomizeException(
+    override fun upload(file: MultipartFile?): Result<String> {
+        file ?: throw CustomizeException(
             StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message()
         )
-        if (uploadFile.size > 1024 * 1024 * 10) throw CustomizeException(
+        if (file.size > 1024 * 1024 * 10) throw CustomizeException(
             StatusCode.PARAM_ERROR.code(), StatusCode.PARAM_ERROR.message()
         )
-        val fileName = uploadFile.originalFilename ?: UUID.randomUUID().toString().replace("-", "")
-        val inputStream = uploadFile.inputStream
+        val fileName = file.originalFilename ?: UUID.randomUUID().toString().replace("-", "")
+        val inputStream = file.inputStream
         try {
             minioClient.putObject(
                 PutObjectArgs.builder()
                     .bucket(minioConfig.getBucketName())
                     .`object`(fileName)
-                    .stream(inputStream, uploadFile.size, -1)
-                    .contentType(uploadFile.contentType)
+                    .stream(inputStream, file.size, -1)
+                    .contentType(file.contentType)
                     .build()
             )
-            inputStream.close()
+            this.baseMapper!!.insert(ImgAddress().apply {
+                this.imgName = fileName
+                this.address = minioConfig.getEndpoint() +
+                        "/" + minioConfig.getBucketName() +
+                        "/" + fileName
+                this.createTime = LocalDateTime.now()
+                this.updateTime = LocalDateTime.now()
+            })
         } catch (e: Exception) {
+            logger.error(e.message)
             throw CustomizeException(
                 StatusCode.ERROR_UPLOAD_WITH_THE_FILE.code(),
                 StatusCode.ERROR_UPLOAD_WITH_THE_FILE.message()
             )
+        } finally {
+            inputStream.close()
         }
         return Result.ok()
     }
@@ -111,5 +129,106 @@ class ImgAddressServiceImpl
         }
     }
 
+    /**
+     * 删除图片
+     */
+    override fun delete(fileName: String): Result<String> {
+        try {
+            // 判断桶是否存在
+            val res = minioClient.bucketExists(
+                BucketExistsArgs
+                    .builder()
+                    .bucket(minioConfig.getBucketName())
+                    .build()
+            )
+            if (res) {
+                // 删除文件
+                minioClient.removeObject(
+                    RemoveObjectArgs.builder().bucket(minioConfig.getBucketName())
+                        .`object`(fileName).build()
+                )
+            }
+        } catch (e: Exception) {
+            logger.error("删除文件失败,原因{}", e.message)
+            return Result.error("删除文件失败")
+        }
+        return Result.ok()
+    }
 
+    /**
+     * 上传多张图片
+     */
+    @Transactional(rollbackFor = [Exception::class])
+    override fun uploadList(
+        files: List<MultipartFile>?,
+        imgDto: ImgDto
+    ): Result<String> {
+        if (files!!.isNullOrEmpty()
+            || imgDto.cartoonId == null
+            || imgDto.chapterId == null
+        ) throw CustomizeException(
+            StatusCode.NOT_FOUND.code(), StatusCode.NOT_FOUND.message()
+        )
+        val imgAddresses = mutableListOf<ImgAddress>()
+        val uploadedFileNames = mutableListOf<String>()
+
+        for (file in files) {
+            if (file.size > 1024 * 1024 * 10) throw CustomizeException(
+                StatusCode.PARAM_ERROR.code(), StatusCode.PARAM_ERROR.message()
+            )
+            val fileName = file.originalFilename
+                ?: UUID.randomUUID().toString().replace("-", "")
+            val inputStream = file.inputStream
+            try {
+                minioClient.putObject(
+                    PutObjectArgs.builder()
+                        .bucket(minioConfig.getBucketName())
+                        .`object`(fileName)
+                        .stream(inputStream, file.size, -1)
+                        .contentType(file.contentType)
+                        .build()
+                )
+                val imgAddress = ImgAddress().apply {
+                    this.imgName = fileName
+                    this.address = "${minioConfig.getEndpoint()}/${minioConfig.getBucketName()}/$fileName"
+                    this.createTime = LocalDateTime.now()
+                    this.updateTime = LocalDateTime.now()
+                }
+                imgAddresses.add(imgAddress)
+                uploadedFileNames.add(fileName)
+            } catch (e: Exception) {
+                logger.error(e.message)
+                throw CustomizeException(
+                    StatusCode.ERROR_UPLOAD_WITH_THE_FILE.code(),
+                    StatusCode.ERROR_UPLOAD_WITH_THE_FILE.message()
+                )
+            } finally {
+                inputStream.close()
+            }
+        }
+        // 使用批量插入数据库
+        val res = this.saveBatch(imgAddresses as Collection<ImgAddress?>?)
+        if (!res) throw CustomizeException(
+            StatusCode.FAILURE.code(), StatusCode.FAILURE.message()
+        )
+        val chapterList = mutableListOf<Chapter>()
+        val qw = QueryWrapper<Chapter>()
+        qw.eq("chapter_id", imgDto.chapterId)
+        qw.eq("cartoon_id", imgDto.cartoonId)
+        val dbChapter = chapterService.getOne(qw) ?: run {
+            imgAddresses.forEach { i ->
+                val chapter = Chapter().apply {
+                    this.cartoonId = imgDto.cartoonId
+                    this.chapterId = imgDto.chapterId
+                    this.imgAddressId = i.id
+                    this.chapterName = "第${imgDto.chapterId}章"
+                    this.createTime = LocalDateTime.now()
+                    this.updateTime = LocalDateTime.now()
+                }
+                chapterList.add(chapter)
+            }
+            chapterService.saveBatch(chapterList as Collection<Chapter?>?)
+        }
+        return Result.ok()
+    }
 }

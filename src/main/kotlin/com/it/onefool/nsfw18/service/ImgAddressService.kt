@@ -2,6 +2,7 @@ package com.it.onefool.nsfw18.service
 
 import com.baomidou.mybatisplus.extension.service.IService
 import com.it.onefool.nsfw18.common.Result
+import com.it.onefool.nsfw18.domain.dto.ImgDto
 import com.it.onefool.nsfw18.domain.entry.ImgAddress
 import org.springframework.web.multipart.MultipartFile
 
@@ -19,10 +20,22 @@ interface ImgAddressService : IService<ImgAddress?> {
     /**
      * 上传图片
      */
-    fun upload(uploadFile: MultipartFile?): Result<String>
+    fun upload(file: MultipartFile?): Result<String>
 
     /**
      * 下载图片
      */
     fun download(imgId: Int): Result<ByteArray>
+
+    /**
+     * 删除图片
+     */
+    fun delete(fileName: String): Result<String>
+
+    /**
+     * 上传多张图片
+     */
+    fun uploadList(files: List<MultipartFile>?,imgDto: ImgDto): Result<String>
+
+
 }

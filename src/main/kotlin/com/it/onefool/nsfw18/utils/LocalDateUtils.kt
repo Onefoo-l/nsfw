@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter
  * @Date 2024/11/24 18:17
  * 时间转换的工具类
  */
+@Component
 class LocalDateUtils {
 
     companion object {
