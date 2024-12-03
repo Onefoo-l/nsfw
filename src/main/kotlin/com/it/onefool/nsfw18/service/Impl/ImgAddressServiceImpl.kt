@@ -184,10 +184,27 @@ class ImgAddressServiceImpl
             if (file.size > 1024 * 1024 * 10) throw CustomizeException(
                 StatusCode.PARAM_ERROR.code(), StatusCode.PARAM_ERROR.message()
             )
-            val fileName = file.originalFilename
+            var fileName = file.originalFilename
                 ?: UUID.randomUUID().toString().replace("-", "")
             val inputStream = file.inputStream
             try {
+                var status = false
+                try {
+                    minioClient.statObject(
+                        StatObjectArgs.builder()
+                            .bucket(minioConfig.getBucketName())
+                            .`object`(fileName)
+                            .build()
+                    )
+                } catch (e: Exception) {
+                    status = true
+                }
+                if (!status) {
+                    fileName = fileName
+                        .split(".")[0] + UUID.randomUUID().toString()
+                        .replace("-", "") + "." + fileName
+                        .split(".")[1]
+                }
                 minioClient.putObject(
                     PutObjectArgs.builder()
                         .bucket(minioConfig.getBucketName())
