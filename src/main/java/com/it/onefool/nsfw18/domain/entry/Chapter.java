@@ -40,7 +40,7 @@ public class Chapter implements Serializable {
     /**
      * 漫画图片id
      */
-    @TableField(value = "imgAddress_id")
+    @TableField(value = "img_address_id")
     private Integer imgAddressId;
     /**
      *

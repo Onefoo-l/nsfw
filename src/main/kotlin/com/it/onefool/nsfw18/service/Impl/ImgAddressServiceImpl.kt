@@ -82,6 +82,7 @@ class ImgAddressServiceImpl
                     .build()
             )
             this.baseMapper!!.insert(ImgAddress().apply {
+                this.imgRank = 1
                 this.imgName = fileName
                 this.address = minioConfig.getEndpoint() +
                         "/" + minioConfig.getBucketName() +
@@ -171,7 +172,14 @@ class ImgAddressServiceImpl
         )
         val imgAddresses = mutableListOf<ImgAddress>()
         val uploadedFileNames = mutableListOf<String>()
-
+        var v = 1
+        val qw = QueryWrapper<Chapter>()
+        qw.eq("cartoon_id", imgDto.cartoonId)
+            .eq("chapter_id", imgDto.chapterId)
+        val chapter = chapterService.list(qw)
+        if (chapter.isNotEmpty()) chapterService.baseMapper.delete(qw)
+        val chapterImg = chapter.map { it?.imgAddressId }.toList()
+        this.removeByIds(chapterImg)
         for (file in files) {
             if (file.size > 1024 * 1024 * 10) throw CustomizeException(
                 StatusCode.PARAM_ERROR.code(), StatusCode.PARAM_ERROR.message()
@@ -189,6 +197,7 @@ class ImgAddressServiceImpl
                         .build()
                 )
                 val imgAddress = ImgAddress().apply {
+                    this.imgRank = v++
                     this.imgName = fileName
                     this.address = "${minioConfig.getEndpoint()}/${minioConfig.getBucketName()}/$fileName"
                     this.createTime = LocalDateTime.now()
@@ -212,23 +221,18 @@ class ImgAddressServiceImpl
             StatusCode.FAILURE.code(), StatusCode.FAILURE.message()
         )
         val chapterList = mutableListOf<Chapter>()
-        val qw = QueryWrapper<Chapter>()
-        qw.eq("chapter_id", imgDto.chapterId)
-        qw.eq("cartoon_id", imgDto.cartoonId)
-        val dbChapter = chapterService.getOne(qw) ?: run {
-            imgAddresses.forEach { i ->
-                val chapter = Chapter().apply {
-                    this.cartoonId = imgDto.cartoonId
-                    this.chapterId = imgDto.chapterId
-                    this.imgAddressId = i.id
-                    this.chapterName = "第${imgDto.chapterId}章"
-                    this.createTime = LocalDateTime.now()
-                    this.updateTime = LocalDateTime.now()
-                }
-                chapterList.add(chapter)
+        imgAddresses.forEach { i ->
+            val chapter = Chapter().apply {
+                this.cartoonId = imgDto.cartoonId
+                this.chapterId = imgDto.chapterId
+                this.imgAddressId = i.id
+                this.chapterName = "第${imgDto.chapterId}章"
+                this.createTime = LocalDateTime.now()
+                this.updateTime = LocalDateTime.now()
             }
-            chapterService.saveBatch(chapterList as Collection<Chapter?>?)
+            chapterList.add(chapter)
         }
+        chapterService.saveBatch(chapterList as Collection<Chapter?>?)
         return Result.ok()
     }
 }

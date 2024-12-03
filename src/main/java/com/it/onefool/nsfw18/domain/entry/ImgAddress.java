@@ -20,6 +20,9 @@ public class ImgAddress implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
+    /**
+     * 图片名字
+     */
     @TableField(value = "img_name")
     private String imgName;
 
@@ -29,6 +32,11 @@ public class ImgAddress implements Serializable {
     @TableField(value = "address")
     private String address;
 
+    /**
+     * 图片的排名
+     */
+    @TableField(value = "img_rank")
+    private Integer imgRank;
     /**
      * 
      */
@@ -40,6 +48,14 @@ public class ImgAddress implements Serializable {
      */
     @TableField(value = "update_time")
     private LocalDateTime updateTime;
+
+    public Integer getImgRank() {
+        return imgRank;
+    }
+
+    public void setImgRank(Integer imgRank) {
+        this.imgRank = imgRank;
+    }
 
     /**
      * 图片id

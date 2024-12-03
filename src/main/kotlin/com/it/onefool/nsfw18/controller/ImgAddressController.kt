@@ -5,10 +5,7 @@ import com.it.onefool.nsfw18.domain.dto.ImgDto
 import com.it.onefool.nsfw18.service.ImgAddressService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 /**
@@ -39,8 +36,14 @@ class ImgAddressController {
      * 上传多张图片(该接口不对用户开放，只用于管理员操作)
      */
     @PostMapping("/uploadList")
-    fun uploadList(files: List<MultipartFile>?,imgDto: ImgDto): Result<String> {
-        return imgAddressService.uploadList(files,imgDto)
+    fun uploadList(files: List<MultipartFile>?,
+        @RequestParam("cartoonId") cartoonId: Int,
+        @RequestParam("chapterId") chapterId: Int
+    ): Result<String> {
+        return imgAddressService.uploadList(files, ImgDto().apply {
+            this.cartoonId = cartoonId
+            this.chapterId = chapterId
+        })
     }
 
 
